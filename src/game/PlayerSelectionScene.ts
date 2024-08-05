@@ -7,8 +7,8 @@ export class PlayerSelectionScene extends Phaser.Scene {
     }
 
     create() {
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2
-        const offsetX = this.cameras.main.worldView.x + this.cameras.main.width / 4
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const offsetX = this.cameras.main.worldView.x + this.cameras.main.width / 4;
 
         this.createAvatar(offsetX, 1, "Lisa");
         this.createAvatar(offsetX, 2, "Mark");

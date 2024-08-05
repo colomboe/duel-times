@@ -1,9 +1,9 @@
-import Phaser from "phaser"
+import Phaser from "phaser";
 import {StartScene} from "./StartScene.ts";
 import {PlayerSelectionScene} from "./PlayerSelectionScene.ts";
 
 export class Game extends Phaser.Game {
-    constructor(parent: any) {
+    constructor(parent: string) {
         super(
             {
                 type: Phaser.AUTO,
