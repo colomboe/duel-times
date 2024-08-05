@@ -1,0 +1,14 @@
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  height: 100svh;
+  background-color: black;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  justify-content: center;
+}

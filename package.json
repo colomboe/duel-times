@@ -11,12 +11,9 @@
   "author": "Emanuele Colombo",
   "license": "GPL-3.0",
   "dependencies": {
-    "animate.css": "^4.1.1",
-    "phaser": "^3.80.1",
-    "preact": "^10.19.5"
+    "phaser": "^3.80.1"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.8.1",
     "typescript": "^5.2.2",
     "vite": "^5.1.4"
   }
