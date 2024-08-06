@@ -3,6 +3,7 @@ export class StartScene extends Phaser.Scene {
     preload() {
         this.load.image('title', 'game-assets/title.png');
         this.load.audio('intro-music', 'game-assets/intro.mp3');
+        this.load.audio('menu-sfx', 'game-assets/sfx/menu.mp3');
     }
 
     create() {
@@ -24,6 +25,7 @@ export class StartScene extends Phaser.Scene {
         this.sound.add('intro-music', { loop: true, volume: 0.5 }).play();
 
         this.input.on("pointerdown", () => {
+            this.sound.add('menu-sfx', { loop: false, volume: 1 }).play();
             this.cameras.main.fadeOut(1000, 0, 0, 0);
         });
 
