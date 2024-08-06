@@ -1,6 +1,6 @@
 import {gameStatus} from "../model/state.ts";
 
-export class NextEnemy extends Phaser.Scene {
+export class NextEnemyScene extends Phaser.Scene {
 
     preload() {
         this.load.audio('menu-sfx', 'game-assets/sfx/menu.mp3');
@@ -59,7 +59,7 @@ export class NextEnemy extends Phaser.Scene {
         });
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            // this.scene.start('Start');
+            this.scene.start('Battle');
         });
     }
 
