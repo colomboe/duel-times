@@ -3,6 +3,10 @@ import {Player, players} from "./players.ts";
 export interface GameStatus {
     selectedPlayer: Player,
     rivals: Rival[],
+    energy: {
+        player: number,
+        rival: number,
+    }
 }
 
 export interface Rival {
@@ -23,5 +27,9 @@ export const gameStatus: GameStatus = {
         { id: '8', status: 'HIDDEN' },
         { id: '9', status: 'HIDDEN' },
         { id: '10', status: 'HIDDEN' },
-    ]
+    ],
+    energy: {
+        player: 100,
+        rival: 100,
+    },
 }
