@@ -14,6 +14,12 @@ export class NextEnemyScene extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const offsetX = this.cameras.main.worldView.x + this.cameras.main.width / 4;
 
+        this.tweens.add({
+            targets:  this.sound.get('intro-music'),
+            volume: 0.5,
+            duration: 500,
+        });
+
         this.add
             .image(offsetX, 500, 'frame')
             .setScale(0.55);
@@ -45,7 +51,7 @@ export class NextEnemyScene extends Phaser.Scene {
 
         this.cameras.main.fadeIn(1000, 0, 0, 0);
 
-        this.input.on("pointerdown", () => {
+        this.input.once("pointerdown", () => {
             this.sound.add('menu-sfx', { loop: false, volume: 1 }).play();
             this.tweens.add({
                 targets:  this.sound.get('intro-music'),

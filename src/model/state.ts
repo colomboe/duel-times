@@ -1,13 +1,10 @@
 import {Player, players} from "./players.ts";
+import {Question} from "./model.ts";
 
 export interface GameStatus {
     selectedPlayer: Player,
     rivals: Rival[],
-    energy: {
-        player: number,
-        rival: number,
-    }
-    // game: Game,
+    currentMatch: CurrentMatch,
 }
 
 export interface Rival {
@@ -15,9 +12,15 @@ export interface Rival {
     status: 'HIDDEN' | 'CURRENT' | 'DEFEATED',
 }
 
-// export interface Game {
-//
-// }
+export interface CurrentMatch {
+    rivalIndex: number,
+    energy: {
+        player: number,
+        rival: number,
+    }
+    currentQuestion?: Question,
+    winner?: 'PLAYER' | 'RIVAL',
+}
 
 export const gameStatus: GameStatus = {
     selectedPlayer: players[0],
@@ -33,11 +36,13 @@ export const gameStatus: GameStatus = {
         { id: '9', status: 'HIDDEN' },
         { id: '10', status: 'HIDDEN' },
     ],
-    energy: {
-        player: 100,
-        rival: 100,
-    },
-    // game: {
-    //
-    // }
+    currentMatch: {
+        rivalIndex: 0,
+        energy: {
+            player: 100,
+            rival: 100,
+        },
+        currentQuestion: undefined,
+        winner: 'PLAYER',
+    }
 };

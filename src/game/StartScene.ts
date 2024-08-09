@@ -24,7 +24,7 @@ export class StartScene extends Phaser.Scene {
 
         this.sound.add('intro-music', { loop: true, volume: 0.5 }).play();
 
-        this.input.on("pointerdown", () => {
+        this.input.once("pointerdown", () => {
             this.sound.add('menu-sfx', { loop: false, volume: 1 }).play();
             this.cameras.main.fadeOut(1000, 0, 0, 0);
         });

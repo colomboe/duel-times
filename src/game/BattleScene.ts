@@ -4,7 +4,7 @@ import Text = Phaser.GameObjects.Text;
 import ParticleEmitter = Phaser.GameObjects.Particles.ParticleEmitter;
 import Container = Phaser.GameObjects.Container;
 import {gameStatus} from "../model/state.ts";
-import {nextQuestion, Question} from "../model/model.ts";
+import {nextQuestion, Question, questionOutcome} from "../model/model.ts";
 
 const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
@@ -12,12 +12,16 @@ const SEND_BACK_BG_DURATION = 1000;
 const ENTER_AVATARS_DURATION = 500;
 const ENERGY_BAR_LOADING_DURATION = 1500;
 const COUNTER_INTERVAL = 1000;
+const SLIDE_QUESTION_DURATION = 500;
+const PAUSE_BEFORE_OUTCOME_SCENE_DURATION = 2000;
 // const FADE_IN_DURATION = 10;
 // const PAUSE_AFTER_FADE_IN_DURATION = 5;
 // const SEND_BACK_BG_DURATION = 10;
 // const ENTER_AVATARS_DURATION = 5;
 // const ENERGY_BAR_LOADING_DURATION = 2;
 // const COUNTER_INTERVAL = 1;
+// const SLIDE_QUESTION_DURATION = 500;
+// const PAUSE_BEFORE_OUTCOME_SCENE_DURATION = 2000;
 
 const avatarY = 780;
 const playerAvatarX = 307;
@@ -41,6 +45,7 @@ export class BattleScene extends Phaser.Scene {
 
     preload() {
         this.load.audio('counter-sfx', 'game-assets/sfx/counter.mp3');
+        this.load.audio('in-game-music', 'game-assets/in-game.mp3');
         this.load.image('rival', 'game-assets/rivals/0.png');
         this.load.image('player', `game-assets/players/${gameStatus.selectedPlayer.id}/normal.png`);
         this.load.image('bg0', 'game-assets/backgrounds/bg0.png');
@@ -49,11 +54,10 @@ export class BattleScene extends Phaser.Scene {
 
     create() {
 
-        // this.sound.stopAll();
-
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
+        this.sound.add('in-game-music', { loop: true, volume: 0.5 }).play();
         this.bg = this.add.image(screenCenterX, screenCenterY, 'bg0');
 
         this.rival = this.add.image(rivalAvatarX, avatarY, 'rival')
@@ -275,14 +279,7 @@ export class BattleScene extends Phaser.Scene {
     }
 
     nextQuestion() {
-        this.add.tween({
-            targets: this.questionContainer,
-            x: { getStart: () => 0, getEnd: () => -2000 },
-            alpha: { getStart: () => 1, getEnd: () => 0 },
-            ease: 'Sine.in',
-            duration: 500,
-        });
-
+        this.moveQuestionOut();
         setTimeout(() => {
             this.currentQuestion = nextQuestion();
             this.questionText!.setText(this.currentQuestion.question);
@@ -294,22 +291,41 @@ export class BattleScene extends Phaser.Scene {
                 x: { getStart: () => 2000, getEnd: () => 0 },
                 alpha: { getStart: () => 0, getEnd: () => 1 },
                 ease: 'Sine.out',
-                duration: 500,
+                duration: SLIDE_QUESTION_DURATION,
             });
-        }, 500);
+        }, SLIDE_QUESTION_DURATION);
+    }
+
+    moveQuestionOut() {
+        this.add.tween({
+            targets: this.questionContainer,
+            x: { getStart: () => 0, getEnd: () => -2000 },
+            alpha: { getStart: () => 1, getEnd: () => 0 },
+            ease: 'Sine.in',
+            duration: SLIDE_QUESTION_DURATION,
+        });
     }
 
     playerSelected(selection: string) {
-        if (selection === this.currentQuestion!.correctResponse) {
-            this.rivalEmitter!.explode(30);
-            gameStatus.energy.rival -= 10;
-        }
-        else {
+        const outcome = questionOutcome(selection);
+        if (outcome.damageEffect === 'PLAYER')
             this.playerEmitter!.explode(30);
-            gameStatus.energy.player -= 10;
-        }
+        else
+            this.rivalEmitter!.explode(30);
+
         this.refreshEnergy(false);
-        this.nextQuestion();
+
+        if (outcome.winner === undefined)
+            this.nextQuestion();
+        else {
+            this.moveQuestionOut();
+            setTimeout(() => {
+                this.cameras.main.fadeOut(300, 0, 0, 0);
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                    this.scene.start('MatchOutcome');
+                });
+            }, PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
+        }
     };
 
 
@@ -324,7 +340,7 @@ export class BattleScene extends Phaser.Scene {
             targets: this.playerEnergy,
             width: {
                 getStart: () => this.playerEnergy?.width ?? 0,
-                getEnd: () => gameStatus.energy.player * 8,
+                getEnd: () => gameStatus.currentMatch.energy.player * 8,
             },
             ease: 'Sine.out',
             duration: ENERGY_BAR_LOADING_DURATION,
@@ -335,7 +351,7 @@ export class BattleScene extends Phaser.Scene {
             targets: this.rivalEnergy,
             width: {
                 getStart: () => this.rivalEnergy?.width ?? 0,
-                getEnd: () => -gameStatus.energy.rival * 8,
+                getEnd: () => -gameStatus.currentMatch.energy.rival * 8,
             },
             ease: 'Sine.out',
             duration: ENERGY_BAR_LOADING_DURATION,

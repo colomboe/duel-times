@@ -3,6 +3,7 @@ import {StartScene} from "./StartScene.ts";
 import {PlayerSelectionScene} from "./PlayerSelectionScene.ts";
 import {NextEnemyScene} from "./NextEnemyScene.ts";
 import {BattleScene} from "./BattleScene.ts";
+import {MatchOutcomeScene} from "./MatchOutcomeScene.ts";
 
 export class Game extends Phaser.Game {
     constructor(parent: string) {
@@ -23,9 +24,11 @@ export class Game extends Phaser.Game {
         this.scene.add('PlayerSelection', PlayerSelectionScene, false);
         this.scene.add('NextEnemy', NextEnemyScene, false);
         this.scene.add('Battle', BattleScene, false);
+        this.scene.add('MatchOutcome', MatchOutcomeScene, false);
         this.scene.start('Start');
         // this.scene.start('PlayerSelection');
         // this.scene.start('NextEnemy');
         // this.scene.start('Battle');
+        // this.scene.start('MatchOutcome');
     }
 }
