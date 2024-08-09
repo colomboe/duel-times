@@ -18,14 +18,6 @@ export class NextEnemyScene extends Phaser.Scene {
             .image(offsetX, 500, 'frame')
             .setScale(0.55);
 
-        // this.add
-        //     .image(offsetX, 680, 'frame')
-        //     .setScale(0.1);
-        //
-        // this.add
-        //     .image(offsetX, 330, 'frame')
-        //     .setScale(0.1);
-
         gameStatus.rivals.forEach((r, index) => {
             if (r.status === "HIDDEN") {
                 this.add
@@ -55,7 +47,15 @@ export class NextEnemyScene extends Phaser.Scene {
 
         this.input.on("pointerdown", () => {
             this.sound.add('menu-sfx', { loop: false, volume: 1 }).play();
-            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.tweens.add({
+                targets:  this.sound.get('intro-music'),
+                volume: {
+                    getStart: () => 0.5,
+                    getEnd: () => 0,
+                },
+                duration: 2000
+            });
+            this.cameras.main.fadeOut(2000, 0, 0, 0);
         });
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {

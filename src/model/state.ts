@@ -7,12 +7,17 @@ export interface GameStatus {
         player: number,
         rival: number,
     }
+    // game: Game,
 }
 
 export interface Rival {
     id: string,
     status: 'HIDDEN' | 'CURRENT' | 'DEFEATED',
 }
+
+// export interface Game {
+//
+// }
 
 export const gameStatus: GameStatus = {
     selectedPlayer: players[0],
@@ -32,4 +37,7 @@ export const gameStatus: GameStatus = {
         player: 100,
         rival: 100,
     },
-}
+    // game: {
+    //
+    // }
+};
