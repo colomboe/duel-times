@@ -3,10 +3,6 @@ import {gameStatus} from "../model/state.ts";
 export class NextEnemyScene extends Phaser.Scene {
 
     preload() {
-        this.load.audio('menu-sfx', 'game-assets/sfx/menu.mp3');
-        this.load.image('frame', 'game-assets/rivals/current.png');
-        this.load.image('placeholder', 'game-assets/rivals/placeholder.png');
-        this.load.image('rival_0', 'game-assets/rivals/0.png');
     }
 
     create() {
@@ -21,19 +17,19 @@ export class NextEnemyScene extends Phaser.Scene {
         });
 
         this.add
-            .image(offsetX, 500, 'frame')
+            .image(offsetX, 500, 'rival-frame')
             .setScale(0.55);
 
-        gameStatus.rivals.forEach((r, index) => {
-            if (r.status === "HIDDEN") {
+        gameStatus.levels.forEach((level) => {
+            if (level.status === "HIDDEN") {
                 this.add
-                    .image(offsetX * (index + 1), 500, 'placeholder')
+                    .image(offsetX * (level.id + 1), 500, 'rival-placeholder')
                     .setAlpha(0.3, 0.3, 0.3, 0.3)
                     .setScale(0.35);
             }
             else {
                 this.add
-                    .image(offsetX * (index + 1), 500, `rival_${index}`)
+                    .image(offsetX * (level.id + 1), 500, `rival-${level.id}`)
                     .setScale(0.35);
             }
 

@@ -1,9 +1,43 @@
+import {gameStatus} from "../model/state.ts";
+import {players} from "../model/players.ts";
+
 export class StartScene extends Phaser.Scene {
 
     preload() {
+
+        const progress = this.add.graphics();
+        this.load.on('progress', (value: number) => {
+            progress.clear();
+            progress.fillStyle(0xffffff, 1);
+            progress.fillRect(0, 270, 800 * value, 60);
+        });
+
+        this.load.on('complete', () => {
+            progress.destroy();
+        });
+
         this.load.image('title', 'game-assets/title.png');
+
         this.load.audio('intro-music', 'game-assets/intro.mp3');
+        this.load.audio('in-game-music', 'game-assets/in-game.mp3');
         this.load.audio('menu-sfx', 'game-assets/sfx/menu.mp3');
+        this.load.audio('counter-sfx', 'game-assets/sfx/counter.mp3');
+
+        this.load.image('rival-frame', 'game-assets/rivals/current.png');
+        this.load.image('rival-placeholder', 'game-assets/rivals/placeholder.png');
+        this.load.image('sparkle', 'game-assets/sparkle-red.png');
+
+        players.forEach(player => {
+            this.load.image(`player-${player.id}`, `game-assets/players/${player.id}/normal.png`);
+            this.load.image(`player-defeated-${player.id}`, `game-assets/players/${player.id}/crying.png`);
+            this.load.image(`player-winner-${player.id}`, `game-assets/players/${player.id}/happy.png`);
+        });
+        gameStatus.levels.forEach(level => {
+            this.load.image(`background-${level.id}`, `game-assets/backgrounds/${level.background}.png`);
+            this.load.image(`rival-${level.id}`, `game-assets/rivals/${level.rivalAvatar}.png`);
+            this.load.image(`rival-defeated-${level.id}`, `game-assets/rivals/${level.rivalAvatar}-defeated.png`);
+        });
+
     }
 
     create() {

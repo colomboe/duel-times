@@ -9,8 +9,6 @@ export class PlayerSelectionScene extends Phaser.Scene {
     private names: Phaser.GameObjects.Text[] = [];
 
     preload() {
-        this.load.audio('menu-sfx', 'game-assets/sfx/menu.mp3');
-        players.forEach(p => this.load.image(`${p.id}_normal`, `game-assets/players/${p.id}/normal.png`));
     }
 
     create() {
@@ -61,7 +59,7 @@ export class PlayerSelectionScene extends Phaser.Scene {
     }
 
     createAvatar(offsetX: number, index: number, player: Player): Image {
-        const avatar = this.add.image(offsetX * (index + 1), 500, `${player.id}_normal`);
+        const avatar = this.add.image(offsetX * (index + 1), 500, `player-${player.id}`);
         avatar.setScale(0.35);
         avatar.setInteractive();
         const text = this.add.text(

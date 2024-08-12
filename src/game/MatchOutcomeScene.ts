@@ -1,6 +1,6 @@
 import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/state.ts";
-import {prepareForNextRival} from "../model/model.ts";
+import {getCurrentLevel, prepareForNextRival} from "../model/model.ts";
 
 export class MatchOutcomeScene extends Phaser.Scene {
 
@@ -8,19 +8,16 @@ export class MatchOutcomeScene extends Phaser.Scene {
     private rivalAvatar?: Image;
 
     preload() {
-        this.load.image('bg0', 'game-assets/backgrounds/bg0.png');
-        this.load.image('player-won', `game-assets/players/${gameStatus.selectedPlayer.id}/happy.png`);
-        this.load.image('player-lost', `game-assets/players/${gameStatus.selectedPlayer.id}/crying.png`);
-        this.load.image('rival-won', 'game-assets/rivals/0.png');
-        this.load.image('rival-lost', 'game-assets/rivals/0-lost.png');
     }
 
     create() {
 
+        const currentLevel = getCurrentLevel();
+
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.image(screenCenterX, screenCenterY, 'bg0')
+        this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.id}`)
             .setAlpha(0.2)
             .setScale(0.9);
 
@@ -39,8 +36,11 @@ export class MatchOutcomeScene extends Phaser.Scene {
     }
 
     afterFadeIn() {
-        const playerImage = gameStatus.currentMatch.winner === 'PLAYER' ? 'player-won' : 'player-lost';
-        const rivalImage = gameStatus.currentMatch.winner === 'RIVAL' ? 'rival-won' : 'rival-lost';
+
+        const currentLevel = getCurrentLevel();
+
+        const playerImage = gameStatus.currentMatch.winner === 'PLAYER' ? `player-winner-${gameStatus.selectedPlayer.id}` : `player-defeated-${gameStatus.selectedPlayer.id}`;
+        const rivalImage = gameStatus.currentMatch.winner === 'RIVAL' ? `rival-${currentLevel.id}` : `rival-defeated-${currentLevel.id}`;
 
         this.playerAvatar = this.add.image(600, 600, playerImage)
             .setScale(0.3)

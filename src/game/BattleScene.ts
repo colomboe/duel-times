@@ -4,7 +4,7 @@ import Text = Phaser.GameObjects.Text;
 import ParticleEmitter = Phaser.GameObjects.Particles.ParticleEmitter;
 import Container = Phaser.GameObjects.Container;
 import {gameStatus} from "../model/state.ts";
-import {nextQuestion, Question, questionOutcome} from "../model/model.ts";
+import {getCurrentLevel, nextQuestion, Question, questionOutcome} from "../model/model.ts";
 
 const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
@@ -44,29 +44,25 @@ export class BattleScene extends Phaser.Scene {
     private currentQuestion?: Question;
 
     preload() {
-        this.load.audio('counter-sfx', 'game-assets/sfx/counter.mp3');
-        this.load.audio('in-game-music', 'game-assets/in-game.mp3');
-        this.load.image('rival', 'game-assets/rivals/0.png');
-        this.load.image('player', `game-assets/players/${gameStatus.selectedPlayer.id}/normal.png`);
-        this.load.image('bg0', 'game-assets/backgrounds/bg0.png');
-        this.load.image('sparkle', 'game-assets/sparkle-red.png');
     }
 
     create() {
+
+        const currentLevel = getCurrentLevel();
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.sound.add('in-game-music', { loop: true, volume: 0.5 }).play();
-        this.bg = this.add.image(screenCenterX, screenCenterY, 'bg0');
+        this.bg = this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.id}`);
 
-        this.rival = this.add.image(rivalAvatarX, avatarY, 'rival')
+        this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.id}`)
             .setScale(0.3)
             .setOrigin(0.5, 0.5)
             .setVisible(false);
         this.rival.setX(this.cameras.main.worldView.x + this.cameras.main.width - this.rival.displayWidth);
 
-        this.player = this.add.image(playerAvatarX, avatarY, 'player')
+        this.player = this.add.image(playerAvatarX, avatarY, `player-${gameStatus.selectedPlayer.id}`)
             .setScale(0.3)
             .setOrigin(0.5, 0.5)
             .setVisible(false);

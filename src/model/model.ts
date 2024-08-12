@@ -14,6 +14,7 @@
 // }
 
 import {gameStatus} from "./state.ts";
+import {Level} from "./levels.ts";
 
 export interface Question {
     question: string,
@@ -64,8 +65,8 @@ export function nextQuestion(): Question {
 }
 
 export function prepareForNextRival() {
-    gameStatus.rivals[gameStatus.currentMatch.rivalIndex].status = 'DEFEATED';
-    gameStatus.rivals[gameStatus.currentMatch.rivalIndex + 1].status = 'CURRENT';
+    gameStatus.levels[gameStatus.currentMatch.rivalIndex].status = 'DEFEATED';
+    gameStatus.levels[gameStatus.currentMatch.rivalIndex + 1].status = 'CURRENT';
 
     gameStatus.currentMatch = {
         rivalIndex: gameStatus.currentMatch.rivalIndex + 1,
@@ -76,4 +77,8 @@ export function prepareForNextRival() {
         currentQuestion: undefined,
         winner: undefined,
     };
+}
+
+export function getCurrentLevel(): Level {
+    return gameStatus.levels.find(l => l.status === 'CURRENT')!;
 }
