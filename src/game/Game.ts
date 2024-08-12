@@ -26,9 +26,5 @@ export class Game extends Phaser.Game {
         this.scene.add('Battle', BattleScene, false);
         this.scene.add('MatchOutcome', MatchOutcomeScene, false);
         this.scene.start('Start');
-        // this.scene.start('PlayerSelection');
-        // this.scene.start('NextEnemy');
-        // this.scene.start('Battle');
-        // this.scene.start('MatchOutcome');
     }
 }

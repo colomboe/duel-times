@@ -1,6 +1,6 @@
 import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/state.ts";
-import {getCurrentLevel, prepareForNextRival} from "../model/model.ts";
+import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/model.ts";
 
 export class MatchOutcomeScene extends Phaser.Scene {
 
@@ -93,8 +93,15 @@ export class MatchOutcomeScene extends Phaser.Scene {
             });
 
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                prepareForNextRival();
-                this.scene.start('NextEnemy');
+
+                if (gameStatus.currentMatch.winner === 'RIVAL') {
+                    resetGame();
+                    this.scene.start('Start');
+                }
+                else {
+                    prepareForNextRival();
+                    this.scene.start('NextEnemy');
+                }
             });
         }, 2000);
 

@@ -13,8 +13,8 @@
 //
 // }
 
-import {gameStatus} from "./state.ts";
-import {Level} from "./levels.ts";
+import {gameStatus, getInitialMatch} from "./state.ts";
+import {getLevels, Level} from "./levels.ts";
 
 export interface Question {
     question: string,
@@ -81,4 +81,14 @@ export function prepareForNextRival() {
 
 export function getCurrentLevel(): Level {
     return gameStatus.levels.find(l => l.status === 'CURRENT')!;
+}
+
+export function getDefeatedCount(): number {
+    return gameStatus.levels.filter(l => l.status === 'DEFEATED').length;
+}
+
+export function resetGame() {
+    gameStatus.levels = getLevels();
+    gameStatus.currentMatch = getInitialMatch();
+
 }

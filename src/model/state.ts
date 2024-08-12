@@ -1,6 +1,6 @@
 import {Player, players} from "./players.ts";
 import {Question} from "./model.ts";
-import {Level, levels} from "./levels.ts";
+import {getLevels, Level} from "./levels.ts";
 
 export interface GameStatus {
     selectedPlayer: Player,
@@ -25,8 +25,12 @@ export interface CurrentMatch {
 
 export const gameStatus: GameStatus = {
     selectedPlayer: players[0],
-    levels: levels,
-    currentMatch: {
+    levels: getLevels(),
+    currentMatch: getInitialMatch(),
+};
+
+export function getInitialMatch(): CurrentMatch {
+    return {
         rivalIndex: 0,
         energy: {
             player: 100,
@@ -34,5 +38,5 @@ export const gameStatus: GameStatus = {
         },
         currentQuestion: undefined,
         winner: 'PLAYER',
-    }
-};
+    };
+}
