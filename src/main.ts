@@ -1,4 +1,4 @@
-import {Game} from "./game/Game.ts";
+import {Game} from "./Game.ts";
 import "./main.css";
 
 new Game("game-container");

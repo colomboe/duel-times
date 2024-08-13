@@ -1,6 +1,6 @@
 import {gameStatus, players} from "../model/data.ts";
 
-export class StartScene extends Phaser.Scene {
+export class Start extends Phaser.Scene {
 
     preload() {
 

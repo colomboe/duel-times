@@ -3,7 +3,7 @@ import Image = Phaser.GameObjects.Image;
 import {Player} from "../model/definitions.ts";
 import {gameStatus, players} from "../model/data.ts";
 
-export class PlayerSelectionScene extends Phaser.Scene {
+export class PlayerSelection extends Phaser.Scene {
 
     private avatars: Phaser.GameObjects.Image[] = [];
     private names: Phaser.GameObjects.Text[] = [];

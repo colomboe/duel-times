@@ -1,7 +1,7 @@
 import {gameStatus} from "../model/data.ts";
 import {getDefeatedCount} from "../model/actions.ts";
 
-export class NextEnemyScene extends Phaser.Scene {
+export class NextEnemy extends Phaser.Scene {
 
     preload() {
     }

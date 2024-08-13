@@ -29,7 +29,7 @@ const avatarY = 780;
 const playerAvatarX = 307;
 const rivalAvatarX = 1673;
 
-export class BattleScene extends Phaser.Scene {
+export class Battle extends Phaser.Scene {
 
     private bg?: Image;
     private rival?: Image;

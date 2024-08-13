@@ -2,7 +2,7 @@ import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/data.ts";
 import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.ts";
 
-export class MatchOutcomeScene extends Phaser.Scene {
+export class MatchOutcome extends Phaser.Scene {
 
     private playerAvatar?: Image;
     private rivalAvatar?: Image;
