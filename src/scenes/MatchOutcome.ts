@@ -87,7 +87,7 @@ export class MatchOutcome extends Phaser.Scene {
                         getStart: () => 0.5,
                         getEnd: () => 0,
                     },
-                    duration: 1000
+                    duration: 800
                 });
                 this.cameras.main.fadeOut(1000, 0, 0, 0);
             });
@@ -95,6 +95,7 @@ export class MatchOutcome extends Phaser.Scene {
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
 
                 this.sound.get("in-game-music").stop();
+                this.sound.get("in-game-music").destroy();
 
                 if (gameStatus.currentMatch.winner === "RIVAL") {
                     resetGame();

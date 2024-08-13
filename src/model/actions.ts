@@ -1,4 +1,4 @@
-import {gameStatus, getInitialMatch, getLevels} from "./data.ts";
+import {complexityMap, gameStatus, getInitialMatch, getLevels, responseDelta, secondFactorValues} from "./data.ts";
 import {Actor, Level, Outcome, Question} from "./definitions.ts";
 
 export function questionOutcome(actor: Actor, response: string): Outcome {
@@ -25,18 +25,20 @@ export function questionOutcome(actor: Actor, response: string): Outcome {
 
 export function nextQuestion(): Question {
 
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
-    const correctResponse = a * b;
-    const correctResponsePosition = Math.floor(Math.random() * 3) + 1;
-    const randomResponse = () => Math.floor(Math.random() * 100) + 1;
+    const enabledTables = complexityMap[gameStatus.currentMatch.currentLevel.complexity];
+
+    const a = enabledTables[Math.floor(Math.random() * enabledTables.length)];
+    const b = secondFactorValues[Math.floor(Math.random() * secondFactorValues.length)];
+
+    const correctAnswer = a * b;
+    const answers = generatePossibleAnswers(correctAnswer);
 
     const newQuestion = {
         question: `${a} x ${b}`,
-        response1: `${correctResponsePosition === 1 ? correctResponse : randomResponse()}`,
-        response2: `${correctResponsePosition === 2 ? correctResponse : randomResponse()}`,
-        response3: `${correctResponsePosition === 3 ? correctResponse : randomResponse()}`,
-        correctResponse: `${correctResponse}`,
+        response1: `${answers[0]}`,
+        response2: `${answers[1]}`,
+        response3: `${answers[2]}`,
+        correctResponse: `${correctAnswer}`,
     };
 
     gameStatus.currentMatch.currentQuestion = newQuestion;
@@ -74,5 +76,25 @@ export function evaluateRivalSelection(): string {
 export function resetGame() {
     gameStatus.levels = getLevels();
     gameStatus.currentMatch = getInitialMatch();
+}
 
+function generatePossibleAnswers(correctAnswer: number): number[] {
+
+    const uniqueIntegers = new Set<number>();
+    uniqueIntegers.add(correctAnswer);
+
+    while (uniqueIntegers.size < 3) {
+        const delta = Math.floor(Math.random() * (2 * responseDelta + 1)) - responseDelta;
+        uniqueIntegers.add(correctAnswer + delta);
+    }
+
+    const resultArray = Array.from(uniqueIntegers);
+
+    // Shuffle the array to randomize the positions
+    for (let i = resultArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [resultArray[i], resultArray[j]] = [resultArray[j], resultArray[i]];
+    }
+
+    return resultArray;
 }
