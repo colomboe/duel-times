@@ -1,5 +1,5 @@
 import {Player, players} from "./players.ts";
-import {Question} from "./model.ts";
+import {Actor, Question} from "./model.ts";
 import {getLevels, Level} from "./levels.ts";
 
 export interface GameStatus {
@@ -14,13 +14,16 @@ export interface Rival {
 }
 
 export interface CurrentMatch {
-    rivalIndex: number,
+    rival: {
+        index: number,
+        responseDelay: number,
+    },
     energy: {
         player: number,
         rival: number,
     }
     currentQuestion?: Question,
-    winner?: 'PLAYER' | 'RIVAL',
+    winner?: Actor,
 }
 
 export const gameStatus: GameStatus = {
@@ -31,7 +34,10 @@ export const gameStatus: GameStatus = {
 
 export function getInitialMatch(): CurrentMatch {
     return {
-        rivalIndex: 0,
+        rival: {
+            index: 0,
+            responseDelay: 4000,
+        },
         energy: {
             player: 100,
             rival: 100,

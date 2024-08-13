@@ -16,6 +16,8 @@
 import {gameStatus, getInitialMatch} from "./state.ts";
 import {getLevels, Level} from "./levels.ts";
 
+export type Actor = 'PLAYER' | 'RIVAL';
+
 export interface Question {
     question: string,
     response1: string,
@@ -25,23 +27,30 @@ export interface Question {
 }
 
 export interface Outcome {
-    damageEffect: 'PLAYER' | 'RIVAL';
-    winner: undefined | 'PLAYER' | 'RIVAL';
+    damageEffect: Actor;
+    winner: undefined | Actor;
 }
 
-export function questionOutcome(playerResponse: string): Outcome {
-    if (playerResponse === gameStatus.currentMatch.currentQuestion!.correctResponse) {
+export function questionOutcome(actor: Actor, response: string): Outcome {
+
+    const playerOk = (): Outcome => {
         gameStatus.currentMatch.energy.rival -= 10;
         const winner = (gameStatus.currentMatch.energy.rival <= 0) ? 'PLAYER' : undefined;
         if (winner) gameStatus.currentMatch.winner = winner;
         return { damageEffect: 'RIVAL', winner };
-    }
-    else {
+    };
+
+    const rivalOk = (): Outcome => {
         gameStatus.currentMatch.energy.player -= 10;
         const winner = (gameStatus.currentMatch.energy.player <= 0) ? 'RIVAL' : undefined;
         if (winner) gameStatus.currentMatch.winner = winner;
         return { damageEffect: 'PLAYER', winner };
-    }
+    };
+
+    if (actor === 'PLAYER')
+        return (response === gameStatus.currentMatch.currentQuestion!.correctResponse) ? playerOk() : rivalOk();
+    else
+        return (response === gameStatus.currentMatch.currentQuestion!.correctResponse) ? rivalOk() : playerOk();
 }
 
 export function nextQuestion(): Question {
@@ -65,11 +74,14 @@ export function nextQuestion(): Question {
 }
 
 export function prepareForNextRival() {
-    gameStatus.levels[gameStatus.currentMatch.rivalIndex].status = 'DEFEATED';
-    gameStatus.levels[gameStatus.currentMatch.rivalIndex + 1].status = 'CURRENT';
+    gameStatus.levels[gameStatus.currentMatch.rival.index].status = 'DEFEATED';
+    gameStatus.levels[gameStatus.currentMatch.rival.index + 1].status = 'CURRENT';
 
     gameStatus.currentMatch = {
-        rivalIndex: gameStatus.currentMatch.rivalIndex + 1,
+        rival: {
+            index: gameStatus.currentMatch.rival.index + 1,
+            responseDelay: 4000,    // TODO
+        },
         energy: {
             player: 100,
             rival: 100,

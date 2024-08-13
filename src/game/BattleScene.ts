@@ -3,8 +3,9 @@ import Rectangle = Phaser.GameObjects.Rectangle;
 import Text = Phaser.GameObjects.Text;
 import ParticleEmitter = Phaser.GameObjects.Particles.ParticleEmitter;
 import Container = Phaser.GameObjects.Container;
+import Tween = Phaser.Tweens.Tween;
 import {gameStatus} from "../model/state.ts";
-import {getCurrentLevel, nextQuestion, Question, questionOutcome} from "../model/model.ts";
+import {Actor, getCurrentLevel, nextQuestion, Question, questionOutcome} from "../model/model.ts";
 
 const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
@@ -34,6 +35,8 @@ export class BattleScene extends Phaser.Scene {
     private player?: Image;
     private playerEnergy?: Rectangle;
     private rivalEnergy?: Rectangle;
+    private rivalProgress?: Rectangle;
+    private rivalProgressTween?: Tween;
     private questionText?: Text;
     private response1?: Text;
     private response2?: Text;
@@ -153,6 +156,24 @@ export class BattleScene extends Phaser.Scene {
 
     showEnergyBars() {
 
+        this.rivalProgress = this.add.rectangle(
+            this.rival!.x - this.rival!.displayWidth / 2,
+            this.rival!.y - this.rival!.displayHeight / 2,
+            0, 10, 0xFFEE58, 1).setOrigin(0, 1);
+
+        this.rivalProgressTween = this.tweens.add({
+            targets: this.rivalProgress,
+            duration: gameStatus.currentMatch.rival.responseDelay + SLIDE_QUESTION_DURATION,
+            paused: true,
+            persist: true,
+            width: {
+                getStart: () => 0,
+                getEnd: () => this.rival?.displayWidth
+            }
+        });
+
+        this.rivalProgressTween.on('complete', () => this.triggerRivalResponse());
+
         this.refreshEnergy(true);
 
         setTimeout(() => {
@@ -253,21 +274,21 @@ export class BattleScene extends Phaser.Scene {
             .setShadow(2, 2, '#333333', 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response1.on('pointerdown', () => { this.playerSelected(this.response1!.text); });
+        this.response1.on('pointerdown', () => { this.handleResponse('PLAYER', this.response1!.text); });
 
         this.response2 = this.add.text(screenCenterX, 420, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#f3dcff'})
             .setStroke('#765387', 8)
             .setShadow(2, 2, '#333333', 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response2.on('pointerdown', () => { this.playerSelected(this.response2!.text); });
+        this.response2.on('pointerdown', () => { this.handleResponse('PLAYER', this.response2!.text); });
 
         this.response3 = this.add.text(screenCenterX + 500, 420, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#f3dcff'})
             .setStroke('#765387', 8)
             .setShadow(2, 2, '#333333', 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response3.on('pointerdown', () => { this.playerSelected(this.response3!.text); });
+        this.response3.on('pointerdown', () => { this.handleResponse('PLAYER', this.response3!.text); });
 
         this.questionContainer = this.add.container(0, 0, [ this.questionText, this.response1, this.response2, this.response3 ]);
 
@@ -289,6 +310,7 @@ export class BattleScene extends Phaser.Scene {
                 ease: 'Sine.out',
                 duration: SLIDE_QUESTION_DURATION,
             });
+            this.rivalProgressTween?.seek(0).play();
         }, SLIDE_QUESTION_DURATION);
     }
 
@@ -302,8 +324,19 @@ export class BattleScene extends Phaser.Scene {
         });
     }
 
-    playerSelected(selection: string) {
-        const outcome = questionOutcome(selection);
+    triggerRivalResponse() {
+        // TODO: introduce a probability to choose the wrong question
+        const rivalSelection = gameStatus.currentMatch.currentQuestion!.correctResponse;
+        this.handleResponse('RIVAL', rivalSelection);
+    }
+
+    handleResponse(actor: Actor, selection: string) {
+
+        this.rivalProgressTween?.pause();
+        this.tweens.add({ targets: this.rivalProgress, duration: 100, width: 0 });
+
+        const outcome = questionOutcome(actor, selection);
+
         if (outcome.damageEffect === 'PLAYER')
             this.playerEmitter!.explode(30);
         else
@@ -323,7 +356,6 @@ export class BattleScene extends Phaser.Scene {
             }, PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
         }
     };
-
 
     refreshEnergy(withAlpha: boolean) {
 

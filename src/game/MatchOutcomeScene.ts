@@ -94,6 +94,8 @@ export class MatchOutcomeScene extends Phaser.Scene {
 
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
 
+                this.sound.get('in-game-music').stop();
+
                 if (gameStatus.currentMatch.winner === 'RIVAL') {
                     resetGame();
                     this.scene.start('Start');
