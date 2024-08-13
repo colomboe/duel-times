@@ -1,6 +1,6 @@
 import Image = Phaser.GameObjects.Image;
-import {gameStatus} from "../model/state.ts";
-import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/model.ts";
+import {gameStatus} from "../model/data.ts";
+import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.ts";
 
 export class MatchOutcomeScene extends Phaser.Scene {
 
@@ -17,7 +17,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.id}`)
+        this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.index}`)
             .setAlpha(0.2)
             .setScale(0.9);
 
@@ -40,7 +40,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
         const currentLevel = getCurrentLevel();
 
         const playerImage = gameStatus.currentMatch.winner === "PLAYER" ? `player-winner-${gameStatus.selectedPlayer.id}` : `player-defeated-${gameStatus.selectedPlayer.id}`;
-        const rivalImage = gameStatus.currentMatch.winner === "RIVAL" ? `rival-${currentLevel.id}` : `rival-defeated-${currentLevel.id}`;
+        const rivalImage = gameStatus.currentMatch.winner === "RIVAL" ? `rival-${currentLevel.index}` : `rival-defeated-${currentLevel.index}`;
 
         this.playerAvatar = this.add.image(600, 600, playerImage)
             .setScale(0.3)

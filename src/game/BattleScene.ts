@@ -4,8 +4,9 @@ import Text = Phaser.GameObjects.Text;
 import ParticleEmitter = Phaser.GameObjects.Particles.ParticleEmitter;
 import Container = Phaser.GameObjects.Container;
 import Tween = Phaser.Tweens.Tween;
-import {gameStatus} from "../model/state.ts";
-import {Actor, getCurrentLevel, nextQuestion, Question, questionOutcome} from "../model/model.ts";
+import {gameStatus} from "../model/data.ts";
+import {evaluateRivalSelection, getCurrentLevel, nextQuestion, questionOutcome} from "../model/actions.ts";
+import {Actor, Question} from "../model/definitions.ts";
 
 const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
@@ -57,9 +58,9 @@ export class BattleScene extends Phaser.Scene {
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.sound.add("in-game-music", { loop: true, volume: 0.5 }).play();
-        this.bg = this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.id}`);
+        this.bg = this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.index}`);
 
-        this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.id}`)
+        this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.index}`)
             .setScale(0.3)
             .setOrigin(0.5, 0.5)
             .setVisible(false);
@@ -163,7 +164,7 @@ export class BattleScene extends Phaser.Scene {
 
         this.rivalProgressTween = this.tweens.add({
             targets: this.rivalProgress,
-            duration: gameStatus.currentMatch.rival.responseDelay + SLIDE_QUESTION_DURATION,
+            duration: gameStatus.currentMatch.currentLevel.rival.responseDelay * 1000 + SLIDE_QUESTION_DURATION,
             paused: true,
             persist: true,
             width: {
@@ -172,7 +173,7 @@ export class BattleScene extends Phaser.Scene {
             }
         });
 
-        this.rivalProgressTween.on("complete", () => this.triggerRivalResponse());
+        this.rivalProgressTween.on("complete", () => this.handleResponse("RIVAL", evaluateRivalSelection()));
 
         this.refreshEnergy(true);
 
@@ -322,12 +323,6 @@ export class BattleScene extends Phaser.Scene {
             ease: "Sine.in",
             duration: SLIDE_QUESTION_DURATION,
         });
-    }
-
-    triggerRivalResponse() {
-        // TODO: introduce a probability to choose the wrong question
-        const rivalSelection = gameStatus.currentMatch.currentQuestion!.correctResponse;
-        this.handleResponse("RIVAL", rivalSelection);
     }
 
     handleResponse(actor: Actor, selection: string) {

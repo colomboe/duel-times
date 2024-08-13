@@ -1,5 +1,5 @@
-import {gameStatus} from "../model/state.ts";
-import {getDefeatedCount} from "../model/model.ts";
+import {gameStatus} from "../model/data.ts";
+import {getDefeatedCount} from "../model/actions.ts";
 
 export class NextEnemyScene extends Phaser.Scene {
 
@@ -26,18 +26,18 @@ export class NextEnemyScene extends Phaser.Scene {
         gameStatus.levels.forEach((level) => {
             if (level.status === "HIDDEN") {
                 this.add
-                    .image(scrollOffsetX + offsetX * (level.id + 2), 500, "rival-placeholder")
+                    .image(scrollOffsetX + offsetX * (level.index + 2), 500, "rival-placeholder")
                     .setAlpha(0.3, 0.3, 0.3, 0.3)
                     .setScale(0.35);
             }
             else if (level.status === "DEFEATED") {
                 this.add
-                    .image(scrollOffsetX + offsetX * (level.id + 2), 500, `rival-defeated-${level.id}`)
+                    .image(scrollOffsetX + offsetX * (level.index + 2), 500, `rival-defeated-${level.index}`)
                     .setScale(0.35);
             }
             else {
                 this.add
-                    .image(scrollOffsetX + offsetX * (level.id + 2), 500, `rival-${level.id}`)
+                    .image(scrollOffsetX + offsetX * (level.index + 2), 500, `rival-${level.index}`)
                     .setScale(0.35);
             }
 

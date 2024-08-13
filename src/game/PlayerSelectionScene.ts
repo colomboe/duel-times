@@ -1,7 +1,7 @@
 import Image = Phaser.GameObjects.Image;
 
-import {Player, players} from "../model/players.ts";
-import {gameStatus} from "../model/state.ts";
+import {Player} from "../model/definitions.ts";
+import {gameStatus, players} from "../model/data.ts";
 
 export class PlayerSelectionScene extends Phaser.Scene {
 

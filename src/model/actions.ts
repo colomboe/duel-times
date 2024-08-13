@@ -1,35 +1,5 @@
-// type Speed = number;        // seconds
-// type Experience = number;    // 1 to 10 points
-// type Difficulty = number;    // ? to ?? points
-
-// interface Character {
-//     speed: Speed,
-//     experience: Experience
-// }
-//
-// interface GameLevel {
-//     targetDifficulty: Difficulty,
-//     questionsNumber: number,
-//
-// }
-
-import {gameStatus, getInitialMatch} from "./state.ts";
-import {getLevels, Level} from "./levels.ts";
-
-export type Actor = "PLAYER" | "RIVAL";
-
-export interface Question {
-    question: string,
-    response1: string,
-    response2: string,
-    response3: string,
-    correctResponse: string,
-}
-
-export interface Outcome {
-    damageEffect: Actor;
-    winner: undefined | Actor;
-}
+import {gameStatus, getInitialMatch, getLevels} from "./data.ts";
+import {Actor, Level, Outcome, Question} from "./definitions.ts";
 
 export function questionOutcome(actor: Actor, response: string): Outcome {
 
@@ -74,14 +44,11 @@ export function nextQuestion(): Question {
 }
 
 export function prepareForNextRival() {
-    gameStatus.levels[gameStatus.currentMatch.rival.index].status = "DEFEATED";
-    gameStatus.levels[gameStatus.currentMatch.rival.index + 1].status = "CURRENT";
+    gameStatus.levels[gameStatus.currentMatch.currentLevel.index].status = "DEFEATED";
+    gameStatus.levels[gameStatus.currentMatch.currentLevel.index + 1].status = "CURRENT";
 
     gameStatus.currentMatch = {
-        rival: {
-            index: gameStatus.currentMatch.rival.index + 1,
-            responseDelay: 4000,    // TODO
-        },
+        currentLevel: gameStatus.levels[gameStatus.currentMatch.currentLevel.index + 1],
         energy: {
             player: 100,
             rival: 100,
@@ -97,6 +64,11 @@ export function getCurrentLevel(): Level {
 
 export function getDefeatedCount(): number {
     return gameStatus.levels.filter(l => l.status === "DEFEATED").length;
+}
+
+export function evaluateRivalSelection(): string {
+    const correctAnswer = Math.random() * 100 <= gameStatus.currentMatch.currentLevel.rival.precision;
+    return correctAnswer ? gameStatus.currentMatch.currentQuestion!.correctResponse : "WRONG";
 }
 
 export function resetGame() {

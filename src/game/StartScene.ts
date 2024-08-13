@@ -1,5 +1,4 @@
-import {gameStatus} from "../model/state.ts";
-import {players} from "../model/players.ts";
+import {gameStatus, players} from "../model/data.ts";
 
 export class StartScene extends Phaser.Scene {
 
@@ -37,9 +36,9 @@ export class StartScene extends Phaser.Scene {
             this.load.image(`player-winner-${player.id}`, `game-assets/players/${player.id}-happy.jpeg`);
         });
         gameStatus.levels.forEach(level => {
-            this.load.image(`background-${level.id}`, `game-assets/backgrounds/${level.background}.jpeg`);
-            this.load.image(`rival-${level.id}`, `game-assets/rivals/${level.rivalAvatar}.jpeg`);
-            this.load.image(`rival-defeated-${level.id}`, `game-assets/rivals/${level.rivalAvatar}-defeated.jpeg`);
+            this.load.image(`background-${level.index}`, `game-assets/backgrounds/${level.background}.jpeg`);
+            this.load.image(`rival-${level.index}`, `game-assets/rivals/${level.rival.avatar}.jpeg`);
+            this.load.image(`rival-defeated-${level.index}`, `game-assets/rivals/${level.rival.avatar}-defeated.jpeg`);
         });
 
     }
