@@ -20,7 +20,7 @@ export class PlayerSelectionScene extends Phaser.Scene {
             this.avatars.push(avatar);
             avatar.once("pointerdown", () => {
                 gameStatus.selectedPlayer = p;
-                this.sound.add('menu-sfx', { loop: false, volume: 1 }).play();
+                this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
                 this.names.forEach(t => {
                     this.tweens.add({
                         targets: t,
@@ -44,17 +44,17 @@ export class PlayerSelectionScene extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             150,
-            'Select your player',
-            {fontFamily: 'Arial Black', fontSize: 74, color: '#ccffff'}
+            "Select your player",
+            {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         );
-        pressToStartText.setStroke('#336699', 16);
-        pressToStartText.setShadow(2, 2, '#333333', 2, true, false);
+        pressToStartText.setStroke("#336699", 16);
+        pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
         pressToStartText.setOrigin(0.5);
 
         this.cameras.main.fadeIn(1000, 0, 0, 0);
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            this.scene.start('NextEnemy');
+            this.scene.start("NextEnemy");
         });
     }
 
@@ -66,7 +66,7 @@ export class PlayerSelectionScene extends Phaser.Scene {
             offsetX * (index + 1),
             800,
             player.label,
-            {fontFamily: 'Arial Black', fontSize: 56, color: '#ccffff'}
+            {fontFamily: "Arial Black", fontSize: 56, color: "#ccffff"}
         );
         text.setOrigin(0.5);
         this.names.push(text);

@@ -56,7 +56,7 @@ export class BattleScene extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.sound.add('in-game-music', { loop: true, volume: 0.5 }).play();
+        this.sound.add("in-game-music", { loop: true, volume: 0.5 }).play();
         this.bg = this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.id}`);
 
         this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.id}`)
@@ -86,22 +86,22 @@ export class BattleScene extends Phaser.Scene {
             .setDepth(100);
 
         this.rivalEmitter = this.add.particles(
-            rivalAvatarX, avatarY, 'sparkle', {
+            rivalAvatarX, avatarY, "sparkle", {
                 lifespan: 1000,
                 speed: { min: 250, max: 350 },
                 scale: { start: 0.5, end: 0 },
                 gravityY: 350,
-                blendMode: 'ADD',
+                blendMode: "ADD",
                 emitting: false
             });
 
         this.playerEmitter = this.add.particles(
-            playerAvatarX, avatarY, 'sparkle', {
+            playerAvatarX, avatarY, "sparkle", {
                 lifespan: 1000,
                 speed: { min: 250, max: 350 },
                 scale: { start: 0.5, end: 0 },
                 gravityY: 350,
-                blendMode: 'ADD',
+                blendMode: "ADD",
                 emitting: false
             });
 
@@ -115,10 +115,10 @@ export class BattleScene extends Phaser.Scene {
             duration: SEND_BACK_BG_DURATION,
             alpha: 0.2,
             scale: 0.9,
-            ease: 'Sin.out',
+            ease: "Sin.out",
         })
             .play()
-            .once('complete', () => {
+            .once("complete", () => {
 
                 this.rival?.setVisible(true);
                 this.tweens.add({
@@ -131,7 +131,7 @@ export class BattleScene extends Phaser.Scene {
                         getStart: () => avatarY + 300,
                         getEnd: () => avatarY,
                     },
-                    ease: 'Sine.out',
+                    ease: "Sine.out",
                     duration: ENTER_AVATARS_DURATION,
                 }).play();
 
@@ -146,7 +146,7 @@ export class BattleScene extends Phaser.Scene {
                         getStart: () => avatarY + 300,
                         getEnd: () => avatarY,
                     },
-                    ease: 'Sine.out',
+                    ease: "Sine.out",
                     duration: ENTER_AVATARS_DURATION,
                 }).play();
             });
@@ -172,7 +172,7 @@ export class BattleScene extends Phaser.Scene {
             }
         });
 
-        this.rivalProgressTween.on('complete', () => this.triggerRivalResponse());
+        this.rivalProgressTween.on("complete", () => this.triggerRivalResponse());
 
         this.refreshEnergy(true);
 
@@ -199,18 +199,18 @@ export class BattleScene extends Phaser.Scene {
     startCountDown() {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const countDownText = this.add.text(screenCenterX, 400, '', {fontFamily: 'Arial Black', fontSize: 224, color: '#ff3a3a'})
-            .setStroke('#600000', 16)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        const countDownText = this.add.text(screenCenterX, 400, "", {fontFamily: "Arial Black", fontSize: 224, color: "#ff3a3a"})
+            .setStroke("#600000", 16)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5);
 
-        const goText = this.add.text(screenCenterX, 400, 'GO!', {fontFamily: 'Arial Black', fontSize: 224, color: '#289f00'})
-            .setStroke('#123e00', 16)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        const goText = this.add.text(screenCenterX, 400, "GO!", {fontFamily: "Arial Black", fontSize: 224, color: "#289f00"})
+            .setStroke("#123e00", 16)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setAlpha(0);
 
-        const sfx = this.sound.add('counter-sfx', { loop: false, volume: 1 });
+        const sfx = this.sound.add("counter-sfx", { loop: false, volume: 1 });
         const showCounter = (n: number) => {
             countDownText.setText(`${n}`);
             this.add.tween({
@@ -223,7 +223,7 @@ export class BattleScene extends Phaser.Scene {
                     getStart: () => 1,
                     getEnd: () => 0,
                 },
-                ease: 'Sine.in',
+                ease: "Sine.in",
                 duration: COUNTER_INTERVAL - 300,
             });
         };
@@ -249,7 +249,7 @@ export class BattleScene extends Phaser.Scene {
                                 getStart: () => 1,
                                 getEnd: () => 0,
                             },
-                            ease: 'Sine.in',
+                            ease: "Sine.in",
                             duration: COUNTER_INTERVAL + 200,
                         });
                         this.startGame();
@@ -264,31 +264,31 @@ export class BattleScene extends Phaser.Scene {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
-        this.questionText = this.add.text(screenCenterX, 200, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#ccffff'})
-            .setStroke('#336699', 16)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        this.questionText = this.add.text(screenCenterX, 200, "", {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"})
+            .setStroke("#336699", 16)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5);
 
-        this.response1 = this.add.text(screenCenterX - 500, 420, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#f3dcff'})
-            .setStroke('#765387', 8)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        this.response1 = this.add.text(screenCenterX - 500, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+            .setStroke("#765387", 8)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response1.on('pointerdown', () => { this.handleResponse('PLAYER', this.response1!.text); });
+        this.response1.on("pointerdown", () => { this.handleResponse("PLAYER", this.response1!.text); });
 
-        this.response2 = this.add.text(screenCenterX, 420, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#f3dcff'})
-            .setStroke('#765387', 8)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        this.response2 = this.add.text(screenCenterX, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+            .setStroke("#765387", 8)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response2.on('pointerdown', () => { this.handleResponse('PLAYER', this.response2!.text); });
+        this.response2.on("pointerdown", () => { this.handleResponse("PLAYER", this.response2!.text); });
 
-        this.response3 = this.add.text(screenCenterX + 500, 420, '', {fontFamily: 'Arial Black', fontSize: 74, color: '#f3dcff'})
-            .setStroke('#765387', 8)
-            .setShadow(2, 2, '#333333', 2, true, false)
+        this.response3 = this.add.text(screenCenterX + 500, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+            .setStroke("#765387", 8)
+            .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response3.on('pointerdown', () => { this.handleResponse('PLAYER', this.response3!.text); });
+        this.response3.on("pointerdown", () => { this.handleResponse("PLAYER", this.response3!.text); });
 
         this.questionContainer = this.add.container(0, 0, [ this.questionText, this.response1, this.response2, this.response3 ]);
 
@@ -307,7 +307,7 @@ export class BattleScene extends Phaser.Scene {
                 targets: this.questionContainer,
                 x: { getStart: () => 2000, getEnd: () => 0 },
                 alpha: { getStart: () => 0, getEnd: () => 1 },
-                ease: 'Sine.out',
+                ease: "Sine.out",
                 duration: SLIDE_QUESTION_DURATION,
             });
             this.rivalProgressTween?.seek(0).play();
@@ -319,7 +319,7 @@ export class BattleScene extends Phaser.Scene {
             targets: this.questionContainer,
             x: { getStart: () => 0, getEnd: () => -2000 },
             alpha: { getStart: () => 1, getEnd: () => 0 },
-            ease: 'Sine.in',
+            ease: "Sine.in",
             duration: SLIDE_QUESTION_DURATION,
         });
     }
@@ -327,7 +327,7 @@ export class BattleScene extends Phaser.Scene {
     triggerRivalResponse() {
         // TODO: introduce a probability to choose the wrong question
         const rivalSelection = gameStatus.currentMatch.currentQuestion!.correctResponse;
-        this.handleResponse('RIVAL', rivalSelection);
+        this.handleResponse("RIVAL", rivalSelection);
     }
 
     handleResponse(actor: Actor, selection: string) {
@@ -337,7 +337,7 @@ export class BattleScene extends Phaser.Scene {
 
         const outcome = questionOutcome(actor, selection);
 
-        if (outcome.damageEffect === 'PLAYER')
+        if (outcome.damageEffect === "PLAYER")
             this.playerEmitter!.explode(30);
         else
             this.rivalEmitter!.explode(30);
@@ -351,7 +351,7 @@ export class BattleScene extends Phaser.Scene {
             setTimeout(() => {
                 this.cameras.main.fadeOut(300, 0, 0, 0);
                 this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    this.scene.start('MatchOutcome');
+                    this.scene.start("MatchOutcome");
                 });
             }, PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
         }
@@ -370,7 +370,7 @@ export class BattleScene extends Phaser.Scene {
                 getStart: () => this.playerEnergy?.width ?? 0,
                 getEnd: () => gameStatus.currentMatch.energy.player * 8,
             },
-            ease: 'Sine.out',
+            ease: "Sine.out",
             duration: ENERGY_BAR_LOADING_DURATION,
         }).play();
 
@@ -381,7 +381,7 @@ export class BattleScene extends Phaser.Scene {
                 getStart: () => this.rivalEnergy?.width ?? 0,
                 getEnd: () => -gameStatus.currentMatch.energy.rival * 8,
             },
-            ease: 'Sine.out',
+            ease: "Sine.out",
             duration: ENERGY_BAR_LOADING_DURATION,
         }).play();
 

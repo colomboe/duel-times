@@ -4,8 +4,8 @@ export interface Player {
 }
 
 export const players: Player[] = [
-    {id: 'rem', label: 'Rem'},
-    {id: 'john', label: 'John'},
-    {id: 'nino', label: 'Nino'},
-    {id: 'foxy', label: 'Foxy'},
+    {id: "rem", label: "Rem"},
+    {id: "john", label: "John"},
+    {id: "nino", label: "Nino"},
+    {id: "foxy", label: "Foxy"},
 ];

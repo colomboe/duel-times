@@ -16,7 +16,7 @@
 import {gameStatus, getInitialMatch} from "./state.ts";
 import {getLevels, Level} from "./levels.ts";
 
-export type Actor = 'PLAYER' | 'RIVAL';
+export type Actor = "PLAYER" | "RIVAL";
 
 export interface Question {
     question: string,
@@ -35,19 +35,19 @@ export function questionOutcome(actor: Actor, response: string): Outcome {
 
     const playerOk = (): Outcome => {
         gameStatus.currentMatch.energy.rival -= 10;
-        const winner = (gameStatus.currentMatch.energy.rival <= 0) ? 'PLAYER' : undefined;
+        const winner = (gameStatus.currentMatch.energy.rival <= 0) ? "PLAYER" : undefined;
         if (winner) gameStatus.currentMatch.winner = winner;
-        return { damageEffect: 'RIVAL', winner };
+        return { damageEffect: "RIVAL", winner };
     };
 
     const rivalOk = (): Outcome => {
         gameStatus.currentMatch.energy.player -= 10;
-        const winner = (gameStatus.currentMatch.energy.player <= 0) ? 'RIVAL' : undefined;
+        const winner = (gameStatus.currentMatch.energy.player <= 0) ? "RIVAL" : undefined;
         if (winner) gameStatus.currentMatch.winner = winner;
-        return { damageEffect: 'PLAYER', winner };
+        return { damageEffect: "PLAYER", winner };
     };
 
-    if (actor === 'PLAYER')
+    if (actor === "PLAYER")
         return (response === gameStatus.currentMatch.currentQuestion!.correctResponse) ? playerOk() : rivalOk();
     else
         return (response === gameStatus.currentMatch.currentQuestion!.correctResponse) ? rivalOk() : playerOk();
@@ -74,8 +74,8 @@ export function nextQuestion(): Question {
 }
 
 export function prepareForNextRival() {
-    gameStatus.levels[gameStatus.currentMatch.rival.index].status = 'DEFEATED';
-    gameStatus.levels[gameStatus.currentMatch.rival.index + 1].status = 'CURRENT';
+    gameStatus.levels[gameStatus.currentMatch.rival.index].status = "DEFEATED";
+    gameStatus.levels[gameStatus.currentMatch.rival.index + 1].status = "CURRENT";
 
     gameStatus.currentMatch = {
         rival: {
@@ -92,11 +92,11 @@ export function prepareForNextRival() {
 }
 
 export function getCurrentLevel(): Level {
-    return gameStatus.levels.find(l => l.status === 'CURRENT')!;
+    return gameStatus.levels.find(l => l.status === "CURRENT")!;
 }
 
 export function getDefeatedCount(): number {
-    return gameStatus.levels.filter(l => l.status === 'DEFEATED').length;
+    return gameStatus.levels.filter(l => l.status === "DEFEATED").length;
 }
 
 export function resetGame() {

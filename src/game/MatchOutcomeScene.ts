@@ -24,11 +24,11 @@ export class MatchOutcomeScene extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             200,
-            'The winner is:',
-            {fontFamily: 'Arial Black', fontSize: 74, color: '#ccffff'}
+            "The winner is:",
+            {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         );
-        pressToStartText.setStroke('#336699', 16);
-        pressToStartText.setShadow(2, 2, '#333333', 2, true, false);
+        pressToStartText.setStroke("#336699", 16);
+        pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
         pressToStartText.setOrigin(0.5);
 
         this.cameras.main.fadeIn(400, 0, 0, 0);
@@ -39,8 +39,8 @@ export class MatchOutcomeScene extends Phaser.Scene {
 
         const currentLevel = getCurrentLevel();
 
-        const playerImage = gameStatus.currentMatch.winner === 'PLAYER' ? `player-winner-${gameStatus.selectedPlayer.id}` : `player-defeated-${gameStatus.selectedPlayer.id}`;
-        const rivalImage = gameStatus.currentMatch.winner === 'RIVAL' ? `rival-${currentLevel.id}` : `rival-defeated-${currentLevel.id}`;
+        const playerImage = gameStatus.currentMatch.winner === "PLAYER" ? `player-winner-${gameStatus.selectedPlayer.id}` : `player-defeated-${gameStatus.selectedPlayer.id}`;
+        const rivalImage = gameStatus.currentMatch.winner === "RIVAL" ? `rival-${currentLevel.id}` : `rival-defeated-${currentLevel.id}`;
 
         this.playerAvatar = this.add.image(600, 600, playerImage)
             .setScale(0.3)
@@ -50,7 +50,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
             .setScale(0.3)
             .setOrigin(0.5, 0.5);
 
-        const imageToScale = gameStatus.currentMatch.winner === 'PLAYER' ? this.playerAvatar : this.rivalAvatar;
+        const imageToScale = gameStatus.currentMatch.winner === "PLAYER" ? this.playerAvatar : this.rivalAvatar;
 
         this.tweens.chain({
             tweens: [
@@ -64,7 +64,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
                         getStart: () => 700,
                         getEnd: () => 600,
                     },
-                    ease: 'Sine.out',
+                    ease: "Sine.out",
                     duration: 1000,
                 },
                 {
@@ -73,7 +73,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
                         getStart: () => 0.3,
                         getEnd: () => 0.6,
                     },
-                    ease: 'Sine.out',
+                    ease: "Sine.out",
                     duration: 1000,
                 },
             ]
@@ -82,7 +82,7 @@ export class MatchOutcomeScene extends Phaser.Scene {
         setTimeout(() => {
             this.input.once("pointerdown", () => {
                 this.tweens.add({
-                    targets:  this.sound.get('in-game-music'),
+                    targets:  this.sound.get("in-game-music"),
                     volume: {
                         getStart: () => 0.5,
                         getEnd: () => 0,
@@ -94,15 +94,15 @@ export class MatchOutcomeScene extends Phaser.Scene {
 
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
 
-                this.sound.get('in-game-music').stop();
+                this.sound.get("in-game-music").stop();
 
-                if (gameStatus.currentMatch.winner === 'RIVAL') {
+                if (gameStatus.currentMatch.winner === "RIVAL") {
                     resetGame();
-                    this.scene.start('Start');
+                    this.scene.start("Start");
                 }
                 else {
                     prepareForNextRival();
-                    this.scene.start('NextEnemy');
+                    this.scene.start("NextEnemy");
                 }
             });
         }, 2000);

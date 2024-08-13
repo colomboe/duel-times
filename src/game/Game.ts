@@ -10,7 +10,7 @@ export class Game extends Phaser.Game {
         super(
             {
                 type: Phaser.AUTO,
-                backgroundColor: '#000000',
+                backgroundColor: "#000000",
                 scale: {
                     mode: Phaser.Scale.FIT,
                     width: 1980,
@@ -20,11 +20,11 @@ export class Game extends Phaser.Game {
                 },
             }
         );
-        this.scene.add('Start', StartScene, false);
-        this.scene.add('PlayerSelection', PlayerSelectionScene, false);
-        this.scene.add('NextEnemy', NextEnemyScene, false);
-        this.scene.add('Battle', BattleScene, false);
-        this.scene.add('MatchOutcome', MatchOutcomeScene, false);
-        this.scene.start('Start');
+        this.scene.add("Start", StartScene, false);
+        this.scene.add("PlayerSelection", PlayerSelectionScene, false);
+        this.scene.add("NextEnemy", NextEnemyScene, false);
+        this.scene.add("Battle", BattleScene, false);
+        this.scene.add("MatchOutcome", MatchOutcomeScene, false);
+        this.scene.start("Start");
     }
 }

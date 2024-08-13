@@ -10,7 +10,7 @@ export interface GameStatus {
 
 export interface Rival {
     id: string,
-    status: 'HIDDEN' | 'CURRENT' | 'DEFEATED',
+    status: "HIDDEN" | "CURRENT" | "DEFEATED",
 }
 
 export interface CurrentMatch {
@@ -43,6 +43,6 @@ export function getInitialMatch(): CurrentMatch {
             rival: 100,
         },
         currentQuestion: undefined,
-        winner: 'PLAYER',
+        winner: "PLAYER",
     };
 }
