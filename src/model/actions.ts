@@ -11,7 +11,7 @@ export function questionOutcome(actor: Actor, response: string): Outcome {
     };
 
     const rivalOk = (): Outcome => {
-        gameStatus.currentMatch.energy.player -= 10;
+        gameStatus.currentMatch.energy.player -= 20;
         const winner = (gameStatus.currentMatch.energy.player <= 0) ? "RIVAL" : undefined;
         if (winner) gameStatus.currentMatch.winner = winner;
         return { damageEffect: "PLAYER", winner };
