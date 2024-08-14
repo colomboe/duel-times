@@ -22,3 +22,8 @@ The media used in this game comes from:
    - https://freesound.org/people/soneproject/sounds/345272/
    - https://freesound.org/people/PaulMorek/sounds/330067/
 
+### Notes
+
+*Please note that this project has been a simple side-project done in the spare time. Also,
+it was the first time I used Phaser framework. Don't consider this code as a good showcase
+about how to use Phaser or how a game should be coded.*
