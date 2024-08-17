@@ -4,6 +4,7 @@ import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.
 
 export class MatchOutcome extends Phaser.Scene {
 
+    private bg?: Image;
     private playerAvatar?: Image;
     private rivalAvatar?: Image;
 
@@ -12,12 +13,10 @@ export class MatchOutcome extends Phaser.Scene {
 
     create() {
 
-        const currentLevel = getCurrentLevel();
-
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.index}`)
+        this.bg = this.add.image(screenCenterX, screenCenterY, "battle_background")
             .setAlpha(0.2)
             .setScale(0.9);
 
@@ -93,6 +92,9 @@ export class MatchOutcome extends Phaser.Scene {
             });
 
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+
+                this.bg?.destroy();
+                this.textures.remove("battle_background");
 
                 this.sound.get("in-game-music").stop();
                 this.sound.get("in-game-music").destroy();

@@ -48,6 +48,8 @@ export class Battle extends Phaser.Scene {
     private currentQuestion?: Question;
 
     preload() {
+        const currentLevel = getCurrentLevel();
+        this.load.image("battle_background", `game-assets/backgrounds/${currentLevel.background}.jpeg`);
     }
 
     create() {
@@ -58,7 +60,7 @@ export class Battle extends Phaser.Scene {
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.sound.add("in-game-music", { loop: true, volume: 0.5 }).play();
-        this.bg = this.add.image(screenCenterX, screenCenterY, `background-${currentLevel.index}`);
+        this.bg = this.add.image(screenCenterX, screenCenterY, "battle_background");
 
         this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.index}`)
             .setScale(0.3)
@@ -346,6 +348,7 @@ export class Battle extends Phaser.Scene {
             setTimeout(() => {
                 this.cameras.main.fadeOut(300, 0, 0, 0);
                 this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                    this.bg?.destroy();
                     this.scene.start("MatchOutcome");
                 });
             }, PAUSE_BEFORE_OUTCOME_SCENE_DURATION);

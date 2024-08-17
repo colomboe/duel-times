@@ -36,7 +36,6 @@ export class Start extends Phaser.Scene {
             this.load.image(`player-winner-${player.id}`, `game-assets/players/${player.id}-happy.jpeg`);
         });
         gameStatus.levels.forEach(level => {
-            this.load.image(`background-${level.index}`, `game-assets/backgrounds/${level.background}.jpeg`);
             this.load.image(`rival-${level.index}`, `game-assets/rivals/${level.rival.avatar}.jpeg`);
             this.load.image(`rival-defeated-${level.index}`, `game-assets/rivals/${level.rival.avatar}-defeated.jpeg`);
         });
