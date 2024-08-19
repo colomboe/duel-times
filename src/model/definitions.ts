@@ -9,6 +9,7 @@ export interface Rival {
     avatar: string,
     responseDelay: number,  // seconds
     precision: number,      // 0 - 100 (%)
+    finalBoss: boolean,
 }
 
 export interface Level {

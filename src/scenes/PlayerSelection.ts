@@ -2,6 +2,7 @@ import Image = Phaser.GameObjects.Image;
 
 import {Player} from "../model/definitions.ts";
 import {gameStatus, players} from "../model/data.ts";
+import {dictionary} from "../model/i18n.ts";
 
 export class PlayerSelection extends Phaser.Scene {
 
@@ -44,7 +45,7 @@ export class PlayerSelection extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             150,
-            "Select your player",
+            dictionary.selectPlayer,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         );
         pressToStartText.setStroke("#336699", 16);

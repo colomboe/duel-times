@@ -1,6 +1,7 @@
 import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/data.ts";
 import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.ts";
+import {dictionary} from "../model/i18n.ts";
 
 export class MatchOutcome extends Phaser.Scene {
 
@@ -23,7 +24,7 @@ export class MatchOutcome extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             200,
-            "The winner is:",
+            dictionary.winner,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         );
         pressToStartText.setStroke("#336699", 16);
@@ -102,6 +103,10 @@ export class MatchOutcome extends Phaser.Scene {
                 if (gameStatus.currentMatch.winner === "RIVAL") {
                     resetGame();
                     this.scene.start("Start");
+                }
+                else if (gameStatus.currentMatch.currentLevel.rival.finalBoss) {
+                    resetGame();
+                    this.scene.start("Final");
                 }
                 else {
                     prepareForNextRival();

@@ -1,4 +1,5 @@
 import {gameStatus, players} from "../model/data.ts";
+import {dictionary} from "../model/i18n.ts";
 
 export class Start extends Phaser.Scene {
 
@@ -44,8 +45,6 @@ export class Start extends Phaser.Scene {
 
     create() {
 
-        // this.scene.start("Battle");
-
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
@@ -54,7 +53,7 @@ export class Start extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             this.cameras.main.height - 150,
-            "Press to start",
+            dictionary.pressToStart,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         );
         pressToStartText.setStroke("#336699", 16);
@@ -70,6 +69,7 @@ export class Start extends Phaser.Scene {
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start("PlayerSelection");
+            // this.scene.start("Final");
         });
     }
 

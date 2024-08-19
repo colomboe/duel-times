@@ -1,5 +1,6 @@
 import {gameStatus} from "../model/data.ts";
 import {getDefeatedCount} from "../model/actions.ts";
+import {dictionary} from "../model/i18n.ts";
 
 export class NextEnemy extends Phaser.Scene {
 
@@ -46,7 +47,7 @@ export class NextEnemy extends Phaser.Scene {
         const pressToStartText = this.add.text(
             screenCenterX,
             50,
-            "Your next rival",
+            dictionary.nextRival,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ffcc00"}
         );
         pressToStartText.setStroke("#665200", 16);
