@@ -23,12 +23,22 @@ export function questionOutcome(actor: Actor, response: string): Outcome {
         return (response === gameStatus.currentMatch.currentQuestion!.correctResponse) ? rivalOk() : playerOk();
 }
 
+const recentQuestions: { a: number, b: number }[] = [];
+
 export function nextQuestion(): Question {
 
     const enabledTables = complexityMap[gameStatus.currentMatch.currentLevel.complexity];
 
-    const a = enabledTables[Math.floor(Math.random() * enabledTables.length)];
-    const b = secondFactorValues[Math.floor(Math.random() * secondFactorValues.length)];
+    let a = 0;
+    let b = 0;
+
+    do {
+        a = enabledTables[Math.floor(Math.random() * enabledTables.length)];
+        b = secondFactorValues[Math.floor(Math.random() * secondFactorValues.length)];
+    } while (recentQuestions.find(recent => sameQuestion(recent, a, b)) !== undefined);
+
+    if (recentQuestions.length >= 5) recentQuestions.shift();
+    recentQuestions.push({ a, b });
 
     const correctAnswer = a * b;
     const answers = generatePossibleAnswers(correctAnswer);
@@ -85,7 +95,7 @@ function generatePossibleAnswers(correctAnswer: number): number[] {
 
     while (uniqueIntegers.size < 3) {
         const delta = Math.floor(Math.random() * (2 * responseDelta + 1)) - responseDelta;
-        uniqueIntegers.add(correctAnswer + delta);
+        uniqueIntegers.add(Math.abs(correctAnswer + delta));
     }
 
     const resultArray = Array.from(uniqueIntegers);
@@ -97,4 +107,8 @@ function generatePossibleAnswers(correctAnswer: number): number[] {
     }
 
     return resultArray;
+}
+
+function sameQuestion(recent: { a: number, b: number }, a: number, b: number): boolean {
+    return (recent.a == a && recent.b == b) || (recent.a == b && recent.b == a);
 }
