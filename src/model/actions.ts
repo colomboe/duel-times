@@ -1,4 +1,4 @@
-import {complexityMap, gameStatus, getInitialMatch, getLevels, responseDelta, secondFactorValues} from "./data.ts";
+import {complexityMap, gameStatus, getInitialMatch, getLevels, secondFactorValues} from "./data.ts";
 import {Actor, Level, Outcome, Question} from "./definitions.ts";
 
 export function questionOutcome(actor: Actor, response: string): Outcome {
@@ -41,7 +41,7 @@ export function nextQuestion(): Question {
     recentQuestions.push({ a, b });
 
     const correctAnswer = a * b;
-    const answers = generatePossibleAnswers(correctAnswer);
+    const answers = generatePossibleAnswers(correctAnswer, a, b);
 
     const newQuestion = {
         question: `${a} x ${b}`,
@@ -88,13 +88,14 @@ export function resetGame() {
     gameStatus.currentMatch = getInitialMatch();
 }
 
-function generatePossibleAnswers(correctAnswer: number): number[] {
+function generatePossibleAnswers(correctAnswer: number, a: number, b: number): number[] {
 
     const uniqueIntegers = new Set<number>();
     uniqueIntegers.add(correctAnswer);
 
     while (uniqueIntegers.size < 3) {
-        const delta = Math.floor(Math.random() * (2 * responseDelta + 1)) - responseDelta;
+
+        const delta = deltaByCase(a, b);
         uniqueIntegers.add(Math.abs(correctAnswer + delta));
     }
 
@@ -107,6 +108,21 @@ function generatePossibleAnswers(correctAnswer: number): number[] {
     }
 
     return resultArray;
+}
+
+function deltaByCase(a: number, b: number): number {
+    const randomCase = Math.floor(Math.random() * 8);
+    switch (randomCase) {
+        case 0: return -2 * a;
+        case 1: return -a;
+        case 2: return a;
+        case 3: return 2 * a;
+        case 4: return -2 * b;
+        case 5: return -b;
+        case 6: return b;
+        case 7: return 2 * b;
+        default: return 0;
+    }
 }
 
 function sameQuestion(recent: { a: number, b: number }, a: number, b: number): boolean {

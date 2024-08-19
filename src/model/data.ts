@@ -42,8 +42,6 @@ export const complexityMap: { [k in Complextity]: number[] } = {
 
 export const secondFactorValues = [ 3, 4, 6, 7, 8, 9 ];
 
-export const responseDelta = 5;
-
 export const gameStatus: GameStatus = {
     selectedPlayer: players[0],
     levels: getLevels(),
