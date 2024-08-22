@@ -2,6 +2,7 @@ type SupportedLanguage = "it" | "en";
 
 interface CopyForLanguage {
     pressToStart: string,
+    moreInfoLink: string,
     selectPlayer: string,
     nextRival: string,
     winner: string,
@@ -15,8 +16,9 @@ function getLanguage(): SupportedLanguage {
 const dictionaries: { [key in SupportedLanguage]: CopyForLanguage } = {
     "it": {
         pressToStart: "Tocca per iniziare",
-        selectPlayer: "Seleziona il tuo personaggio:",
-        nextRival: "Prossimo avversario:",
+        moreInfoLink: "o tocca qui per maggiori informazioni sul gioco.",
+        selectPlayer: "Seleziona il tuo personaggio",
+        nextRival: "Prossimo avversario",
         winner: "Il vincitore è",
         credits: `
 GRAZIE PER AVER SALVATO IL REGNO
@@ -89,8 +91,9 @@ THE END
     },
     "en": {
         pressToStart: "Tap to start",
-        selectPlayer: "Select your character:",
-        nextRival: "Next opponent:",
+        moreInfoLink: "or tap here for more info about the game.",
+        selectPlayer: "Select your character",
+        nextRival: "Next opponent",
         winner: "The winner is",
         credits: `
 THANK YOU FOR SAVING THE

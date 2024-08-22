@@ -48,28 +48,37 @@ export class Start extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.image(screenCenterX, screenCenterY, "title");
+        this.add.image(screenCenterX, screenCenterY, "title")
+            .setInteractive()
+            .once("pointerdown", () => {
+                this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
+                this.cameras.main.fadeOut(1000, 0, 0, 0);
+            });
 
-        const pressToStartText = this.add.text(
+        this.add.text(
             screenCenterX,
-            this.cameras.main.height - 150,
+            this.cameras.main.height - 160,
             dictionary.pressToStart,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
-        );
-        pressToStartText.setStroke("#336699", 16);
-        pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
-        pressToStartText.setOrigin(0.5);
+        )
+            .setStroke("#336699", 16)
+            .setShadow(2, 2, "#333333", 2, true, false)
+            .setOrigin(0.5);
+
+        this.add.text(
+            screenCenterX,
+            this.cameras.main.height - 50,
+            dictionary.moreInfoLink,
+            {fontFamily: "Arial", fontSize: 28, color: "#aaaaaa", fontStyle: "italic"}
+        )
+            .setOrigin(0.5)
+            .setInteractive()
+            .on("pointerdown", () => window.open("https://github.com/colomboe/duel-times/blob/main/README.md", "_blank"));
 
         this.sound.add("intro-music", { loop: true, volume: 0.5 }).play();
 
-        this.input.once("pointerdown", () => {
-            this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
-            this.cameras.main.fadeOut(1000, 0, 0, 0);
-        });
-
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start("PlayerSelection");
-            // this.scene.start("Final");
         });
     }
 
