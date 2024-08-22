@@ -20,7 +20,7 @@ export class Start extends Phaser.Scene {
             progressBarValue.destroy();
         });
 
-        this.load.image("title", "game-assets/title.png");
+        this.load.image("title", "game-assets/title.jpg");
 
         this.load.audio("intro-music", "game-assets/intro.mp3");
         this.load.audio("in-game-music", "game-assets/in-game.mp3");
@@ -49,6 +49,7 @@ export class Start extends Phaser.Scene {
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.add.image(screenCenterX, screenCenterY, "title")
+            .setScale(0.85)
             .setInteractive()
             .once("pointerdown", () => {
                 this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
@@ -57,7 +58,7 @@ export class Start extends Phaser.Scene {
 
         this.add.text(
             screenCenterX,
-            this.cameras.main.height - 160,
+            this.cameras.main.height - 180,
             dictionary.pressToStart,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
         )
