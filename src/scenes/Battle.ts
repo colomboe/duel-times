@@ -187,8 +187,14 @@ export class Battle extends Phaser.Scene {
                 800, 60, 0xff0000, 1)
                 .setOrigin(0, 0);
 
+            console.log(rivalAvatarX);
+            console.log(this.rival!.displayWidth);
+            console.log(rivalAvatarX - this.rival!.displayWidth * 0.5);
+            console.log(this.rival?.scaleX);
+            console.log(this.rival?.scale);
+
             this.add.rectangle(
-                rivalAvatarX - this.rival!.displayWidth * 0.5,
+                rivalAvatarX - this.rival!.displayWidth * 0.5 - 60,
                 avatarY + 40,
                 800, 60, 0xff0000, 1)
                 .setOrigin(1, 0);

@@ -78,10 +78,9 @@ export class Story extends Phaser.Scene {
     }
 
     scene2() {
-        if (this.textParagraph == null) return;
         this.typeWriterEvent?.remove();
         this.typeWriterEvent?.destroy();
-        this.textParagraph.text = "";
+        this.textParagraph!.text = "";
 
         const player = gameStatus.selectedPlayer;
         this.avatar2 = this.add.image(1700, 900, `player-${player.id}-sad`)
@@ -104,10 +103,9 @@ export class Story extends Phaser.Scene {
     }
 
     scene3() {
-        if (this.textParagraph == null) return;
         this.typeWriterEvent?.remove();
         this.typeWriterEvent?.destroy();
-        this.textParagraph.text = "";
+        this.textParagraph!.text = "";
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start("NextEnemy");
