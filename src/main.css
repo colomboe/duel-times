@@ -1,14 +1,15 @@
-body {
-  padding: 0;
+html {
   margin: 0;
-  overflow: hidden;
-  height: 100svh;
-  background-color: black;
 }
 
-#app {
-  display: flex;
-  flex-direction: column;
-  height: 100svh;
-  justify-content: center;
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+}
+
+canvas {
+  background-color: #000000;
 }
