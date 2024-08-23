@@ -26,7 +26,7 @@ export class Story extends Phaser.Scene {
 
         this.add.image(screenCenterX, screenCenterY, "story1")
             .setInteractive()
-            .once("pointerdown", () => this.scene2());
+            .once("pointerdown", () => this.scene3());
 
         this.story2 = this.add.image(screenCenterX, screenCenterY, "story2").setAlpha(0)
             .setInteractive()
