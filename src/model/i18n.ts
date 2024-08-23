@@ -4,6 +4,8 @@ interface CopyForLanguage {
     pressToStart: string,
     moreInfoLink: string,
     selectPlayer: string,
+    story1: string,
+    story2: string,
     nextRival: string,
     winner: string,
     credits: string,
@@ -18,6 +20,8 @@ const dictionaries: { [key in SupportedLanguage]: CopyForLanguage } = {
         pressToStart: "Tocca per iniziare",
         moreInfoLink: "o tocca qui per maggiori informazioni sul gioco.",
         selectPlayer: "Seleziona il tuo personaggio",
+        story1: "Il regno della matematica è sempre stato allegro e rigoglioso, fino a quando non è arrivato\nun mago malvagio che ha portato l'oscurità ovunque.",
+        story2: "Ho bisogno del tuo aiuto! Dobbiamo superare tutti gli animali magici che ha stregato e\nsconfiggere il mago oscuro. Così riporteremo pace e gioia nel regno!",
         nextRival: "Prossimo avversario",
         winner: "Il vincitore è",
         credits: `
@@ -93,6 +97,8 @@ THE END
         pressToStart: "Tap to start",
         moreInfoLink: "or tap here for more info about the game.",
         selectPlayer: "Select your character",
+        story1: "The kingdom of mathematics has always been cheerful and flourishing, until an evil wizard\narrived and brought darkness everywhere.",
+        story2: "I need your help! We must overcome all the magical creatures he has enchanted and defeat\nthe dark wizard! This way, we will bring peace and joy back to the kingdom!",
         nextRival: "Next opponent",
         winner: "The winner is",
         credits: `

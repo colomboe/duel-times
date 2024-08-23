@@ -31,6 +31,9 @@ export class Start extends Phaser.Scene {
         this.load.image("rival-placeholder", "game-assets/rivals/placeholder.jpeg");
         this.load.image("sparkle", "game-assets/sparkle-red.png");
 
+        this.load.image("story1", "game-assets/backgrounds/story1.jpeg");
+        this.load.image("story2", "game-assets/backgrounds/story2.jpeg");
+
         players.forEach(player => {
             this.load.image(`player-${player.id}`, `game-assets/players/${player.id}-normal.jpeg`);
             this.load.image(`player-defeated-${player.id}`, `game-assets/players/${player.id}-crying.jpeg`);

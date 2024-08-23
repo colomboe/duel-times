@@ -55,7 +55,7 @@ export class PlayerSelection extends Phaser.Scene {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            this.scene.start("NextEnemy");
+            this.scene.start("Story");
         });
     }
 

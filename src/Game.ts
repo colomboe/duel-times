@@ -5,6 +5,7 @@ import {NextEnemy} from "./scenes/NextEnemy.ts";
 import {Battle} from "./scenes/Battle.ts";
 import {MatchOutcome} from "./scenes/MatchOutcome.ts";
 import {Final} from "./scenes/Final.ts";
+import {Story} from "./scenes/Story.ts";
 
 export class Game extends Phaser.Game {
     constructor(parent: string) {
@@ -23,6 +24,7 @@ export class Game extends Phaser.Game {
         );
         this.scene.add("Start", Start, false);
         this.scene.add("PlayerSelection", PlayerSelection, false);
+        this.scene.add("Story", Story, false);
         this.scene.add("NextEnemy", NextEnemy, false);
         this.scene.add("Battle", Battle, false);
         this.scene.add("MatchOutcome", MatchOutcome, false);
