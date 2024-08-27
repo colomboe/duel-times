@@ -46,7 +46,7 @@ export class NextEnemy extends Phaser.Scene {
 
         const pressToStartText = this.add.text(
             screenCenterX,
-            50,
+            150,
             dictionary.nextRival,
             {fontFamily: "Arial Black", fontSize: 74, color: "#ffcc00"}
         );

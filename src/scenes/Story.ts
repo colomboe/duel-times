@@ -39,13 +39,13 @@ export class Story extends Phaser.Scene {
     scene1() {
         const player = gameStatus.selectedPlayer;
 
-        this.textArea = this.add.rectangle(0, 900, 0, 300, 0x000000, 0.6)
+        this.textArea = this.add.rectangle(0, 800, 0, 400, 0x000000, 0.6)
             .setOrigin(0, 0);
 
         this.avatar1 = this.add.image(1700, 600, `player-${player.id}`)
             .setScale(0.35);
 
-        this.textParagraph = this.add.text(100, 930, "", {fontFamily: "Arial", fontSize: 32, color: "#ccffff"})
+        this.textParagraph = this.add.text(100, 830, "", {fontFamily: "Arial", fontSize: 48, color: "#ccffff"})
             .setStroke("#336699", 8);
 
         this.tweens.add({
