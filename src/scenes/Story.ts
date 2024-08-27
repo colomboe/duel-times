@@ -105,7 +105,7 @@ export class Story extends Phaser.Scene {
     scene3() {
         this.typeWriterEvent?.remove();
         this.typeWriterEvent?.destroy();
-        this.textParagraph!.text = "";
+        if (this.textParagraph) this.textParagraph.text = "";
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
             this.scene.start("NextEnemy");

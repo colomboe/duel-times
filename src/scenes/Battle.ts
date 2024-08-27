@@ -16,14 +16,6 @@ const ENERGY_BAR_LOADING_DURATION = 1500;
 const COUNTER_INTERVAL = 1000;
 const SLIDE_QUESTION_DURATION = 500;
 const PAUSE_BEFORE_OUTCOME_SCENE_DURATION = 2000;
-// const FADE_IN_DURATION = 10;
-// const PAUSE_AFTER_FADE_IN_DURATION = 5;
-// const SEND_BACK_BG_DURATION = 10;
-// const ENTER_AVATARS_DURATION = 5;
-// const ENERGY_BAR_LOADING_DURATION = 2;
-// const COUNTER_INTERVAL = 1;
-// const SLIDE_QUESTION_DURATION = 500;
-// const PAUSE_BEFORE_OUTCOME_SCENE_DURATION = 2000;
 
 const avatarY = 780;
 const playerAvatarX = 307;
@@ -46,6 +38,7 @@ export class Battle extends Phaser.Scene {
     private playerEmitter?: ParticleEmitter;
     private rivalEmitter?: ParticleEmitter;
     private currentQuestion?: Question;
+    private answerProvided: boolean = false;
 
     preload() {
         const currentLevel = getCurrentLevel();
@@ -54,6 +47,7 @@ export class Battle extends Phaser.Scene {
 
     create() {
 
+        this.answerProvided = false;
         const currentLevel = getCurrentLevel();
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
@@ -187,12 +181,6 @@ export class Battle extends Phaser.Scene {
                 800, 60, 0xff0000, 1)
                 .setOrigin(0, 0);
 
-            console.log(rivalAvatarX);
-            console.log(this.rival!.displayWidth);
-            console.log(rivalAvatarX - this.rival!.displayWidth * 0.5);
-            console.log(this.rival?.scaleX);
-            console.log(this.rival?.scale);
-
             this.add.rectangle(
                 rivalAvatarX - this.rival!.displayWidth * 0.5 - 60,
                 avatarY + 40,
@@ -320,6 +308,7 @@ export class Battle extends Phaser.Scene {
                 duration: SLIDE_QUESTION_DURATION,
             });
             this.rivalProgressTween?.seek(0).play();
+            this.answerProvided = false;
         }, SLIDE_QUESTION_DURATION);
     }
 
@@ -334,6 +323,9 @@ export class Battle extends Phaser.Scene {
     }
 
     handleResponse(actor: Actor, selection: string) {
+
+        if (this.answerProvided) return;
+        this.answerProvided = true;
 
         this.rivalProgressTween?.pause();
         this.tweens.add({ targets: this.rivalProgress, duration: 100, width: 0 });
