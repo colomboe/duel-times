@@ -79,6 +79,7 @@ export class Start extends Phaser.Scene {
             .setInteractive()
             .on("pointerdown", () => window.open("https://github.com/colomboe/duel-times/blob/main/README.md", "_blank"));
 
+        this.sound.removeByKey("intro-music");
         this.sound.add("intro-music", { loop: true, volume: 0.5 }).play();
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
