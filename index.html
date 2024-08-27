@@ -9,7 +9,13 @@
   </head>
   <body>
     <div id="phaser-world"></div>
+    <script type="module" src="./node_modules/@khmyznikov/pwa-install/dist/pwa-install.bundle.js"></script>
     <script type="module" src="/src/main.ts"></script>
     <script async defer src="https://scripts.withcabin.com/hello.js"></script>
+    <pwa-install id="pwa-install" manifest-url="manifest.json" description="Duel Time game"></pwa-install>
+
+    <script type="text/javascript">
+      document.getElementsByTagName('pwa-install')[0].install();
+    </script>
   </body>
 </html>
