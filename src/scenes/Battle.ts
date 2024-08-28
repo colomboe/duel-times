@@ -196,12 +196,12 @@ export class Battle extends Phaser.Scene {
     startCountDown() {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const countDownText = this.add.text(screenCenterX, 400, "", {fontFamily: "Arial Black", fontSize: 224, color: "#ff3a3a"})
+        const countDownText = this.add.text(screenCenterX, 400, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: "#ff3a3a"})
             .setStroke("#600000", 16)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5);
 
-        const goText = this.add.text(screenCenterX, 400, "GO!", {fontFamily: "Arial Black", fontSize: 224, color: "#289f00"})
+        const goText = this.add.text(screenCenterX, 400, "GO!", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: "#289f00"})
             .setStroke("#123e00", 16)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
@@ -261,26 +261,26 @@ export class Battle extends Phaser.Scene {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
-        this.questionText = this.add.text(screenCenterX, 200, "", {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"})
+        this.questionText = this.add.text(screenCenterX, 200, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"})
             .setStroke("#336699", 16)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5);
 
-        this.response1 = this.add.text(screenCenterX - 500, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+        this.response1 = this.add.text(screenCenterX - 500, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
             .setStroke("#765387", 8)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
         this.response1.on("pointerdown", () => { this.handleResponse("PLAYER", this.response1!.text); });
 
-        this.response2 = this.add.text(screenCenterX, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+        this.response2 = this.add.text(screenCenterX, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
             .setStroke("#765387", 8)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
         this.response2.on("pointerdown", () => { this.handleResponse("PLAYER", this.response2!.text); });
 
-        this.response3 = this.add.text(screenCenterX + 500, 420, "", {fontFamily: "Arial Black", fontSize: 74, color: "#f3dcff"})
+        this.response3 = this.add.text(screenCenterX + 500, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
             .setStroke("#765387", 8)
             .setShadow(2, 2, "#333333", 2, true, false)
             .setOrigin(0.5)

@@ -46,7 +46,7 @@ export class PlayerSelection extends Phaser.Scene {
             screenCenterX,
             150,
             dictionary.selectPlayer,
-            {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
+            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"}
         );
         pressToStartText.setStroke("#336699", 16);
         pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
@@ -67,7 +67,7 @@ export class PlayerSelection extends Phaser.Scene {
             offsetX * (index + 1),
             800,
             player.label,
-            {fontFamily: "Arial Black", fontSize: 56, color: "#ccffff"}
+            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color: "#ccffff"}
         );
         text.setOrigin(0.5);
         this.names.push(text);

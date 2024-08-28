@@ -63,7 +63,7 @@ export class Start extends Phaser.Scene {
             screenCenterX,
             this.cameras.main.height - 180,
             dictionary.pressToStart,
-            {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
+            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"}
         )
             .setStroke("#336699", 16)
             .setShadow(2, 2, "#333333", 2, true, false)

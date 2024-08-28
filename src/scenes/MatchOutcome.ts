@@ -25,7 +25,7 @@ export class MatchOutcome extends Phaser.Scene {
             screenCenterX,
             200,
             dictionary.winner,
-            {fontFamily: "Arial Black", fontSize: 74, color: "#ccffff"}
+            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"}
         );
         pressToStartText.setStroke("#336699", 16);
         pressToStartText.setShadow(2, 2, "#333333", 2, true, false);

@@ -48,7 +48,7 @@ export class NextEnemy extends Phaser.Scene {
             screenCenterX,
             150,
             dictionary.nextRival,
-            {fontFamily: "Arial Black", fontSize: 74, color: "#ffcc00"}
+            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ffcc00"}
         );
         pressToStartText.setStroke("#665200", 16);
         pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
