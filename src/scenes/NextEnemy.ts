@@ -1,6 +1,7 @@
 import {gameStatus} from "../model/data.ts";
 import {getDefeatedCount} from "../model/actions.ts";
 import {dictionary} from "../model/i18n.ts";
+import {fonts, paletteString} from "../Config.ts";
 
 export class NextEnemy extends Phaser.Scene {
 
@@ -44,15 +45,10 @@ export class NextEnemy extends Phaser.Scene {
 
         });
 
-        const pressToStartText = this.add.text(
-            screenCenterX,
-            150,
-            dictionary.nextRival,
-            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ffcc00"}
-        );
-        pressToStartText.setStroke("#665200", 16);
-        pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
-        pressToStartText.setOrigin(0.5);
+        this.add.text(screenCenterX, 150, dictionary.nextRival, fonts.big(paletteString.yellow))
+            .setStroke(paletteString.gold, 16)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
+            .setOrigin(0.5);
 
         this.cameras.main.fadeIn(1000, 0, 0, 0);
 

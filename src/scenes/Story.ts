@@ -6,7 +6,7 @@ import {gameStatus} from "../model/data.ts";
 import {dictionary} from "../model/i18n.ts";
 import {BaseScene, XYPoint} from "./BaseScene.ts";
 import {Player} from "../model/definitions.ts";
-import {paletteString, timing} from "../Config.ts";
+import {fonts, paletteHex, paletteString, timing} from "../Config.ts";
 
 export class Story extends BaseScene {
 
@@ -38,7 +38,7 @@ export class Story extends BaseScene {
 
     private showFirstParagraph() {
 
-        this.textArea = this.add.rectangle(0, 800, 0, 400, 0x000000, 0.6).setOrigin(0, 0);
+        this.textArea = this.add.rectangle(0, 800, 0, 400, paletteHex.black, 0.6).setOrigin(0, 0);
         this.avatar1 = this.add.image(1700, 600, `player-${this.player!.id}`).setScale(0.35);
 
         this.tweens.add({
@@ -58,7 +58,7 @@ export class Story extends BaseScene {
 
         textAreaTween.on("complete", () => {
             this.textParagraph = this.add
-                .text(100, 830, "", {fontFamily: "Arial", fontSize: 48, color: paletteString.lightCyan})
+                .text(100, 830, "", fonts.small(paletteString.lightCyan))
                 .setStroke(paletteString.blue, 8);
 
             this.typewriteText(dictionary.story1, timing.textReadingPause, () => this.showSecondBackgroundAndParagraph());

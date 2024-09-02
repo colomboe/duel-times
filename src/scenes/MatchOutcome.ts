@@ -2,6 +2,7 @@ import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/data.ts";
 import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.ts";
 import {dictionary} from "../model/i18n.ts";
+import {fonts, paletteString} from "../Config.ts";
 
 export class MatchOutcome extends Phaser.Scene {
 
@@ -21,15 +22,10 @@ export class MatchOutcome extends Phaser.Scene {
             .setAlpha(0.2)
             .setScale(0.9);
 
-        const pressToStartText = this.add.text(
-            screenCenterX,
-            200,
-            dictionary.winner,
-            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"}
-        );
-        pressToStartText.setStroke("#336699", 16);
-        pressToStartText.setShadow(2, 2, "#333333", 2, true, false);
-        pressToStartText.setOrigin(0.5);
+        this.add.text(screenCenterX, 200, dictionary.winner, fonts.big(paletteString.lightCyan))
+            .setStroke(paletteString.blue, 16)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
+            .setOrigin(0.5);
 
         this.cameras.main.fadeIn(400, 0, 0, 0);
         setTimeout(() => this.afterFadeIn(), 700);

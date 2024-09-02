@@ -7,6 +7,7 @@ import Tween = Phaser.Tweens.Tween;
 import {gameStatus} from "../model/data.ts";
 import {evaluateRivalSelection, getCurrentLevel, nextQuestion, questionOutcome} from "../model/actions.ts";
 import {Actor, Question} from "../model/definitions.ts";
+import {fonts, paletteHex, paletteString} from "../Config.ts";
 
 const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
@@ -71,14 +72,14 @@ export class Battle extends Phaser.Scene {
         this.playerEnergy = this.add.rectangle(
             this.player!.displayWidth * 1.5,
             avatarY - 100,
-            0, 60, 0x0EC756, 1)
+            0, 60, paletteHex.green, 1)
             .setOrigin(0, 0)
             .setDepth(100);
 
         this.rivalEnergy = this.add.rectangle(
             this.cameras.main.worldView.x + this.cameras.main.width - this.rival.displayWidth * 1.5,
             avatarY + 40,
-            0, 60, 0x0EC756, 1)
+            0, 60, paletteHex.green, 1)
             .setOrigin(1, 0)
             .setDepth(100);
 
@@ -156,7 +157,7 @@ export class Battle extends Phaser.Scene {
         this.rivalProgress = this.add.rectangle(
             this.rival!.x - this.rival!.displayWidth / 2,
             this.rival!.y - this.rival!.displayHeight / 2,
-            0, 10, 0xFFEE58, 1).setOrigin(0, 1);
+            0, 10, paletteHex.yellow, 1).setOrigin(0, 1);
 
         this.rivalProgressTween = this.tweens.add({
             targets: this.rivalProgress,
@@ -178,13 +179,13 @@ export class Battle extends Phaser.Scene {
             this.add.rectangle(
                 this.player!.displayWidth * 1.5,
                 avatarY - 100,
-                800, 60, 0xff0000, 1)
+                800, 60, paletteHex.red, 1)
                 .setOrigin(0, 0);
 
             this.add.rectangle(
                 rivalAvatarX - this.rival!.displayWidth * 0.5 - 60,
                 avatarY + 40,
-                800, 60, 0xff0000, 1)
+                800, 60, paletteHex.red, 1)
                 .setOrigin(1, 0);
 
             this.startCountDown();
@@ -196,14 +197,14 @@ export class Battle extends Phaser.Scene {
     startCountDown() {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const countDownText = this.add.text(screenCenterX, 400, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: "#ff3a3a"})
-            .setStroke("#600000", 16)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        const countDownText = this.add.text(screenCenterX, 400, "", fonts.veryBig(paletteString.red))
+            .setStroke(paletteString.darkRed, 16)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        const goText = this.add.text(screenCenterX, 400, "GO!", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: "#289f00"})
-            .setStroke("#123e00", 16)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        const goText = this.add.text(screenCenterX, 400, "GO!", fonts.veryBig(paletteString.green))
+            .setStroke(paletteString.darkGreen, 16)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setAlpha(0);
 
@@ -261,28 +262,28 @@ export class Battle extends Phaser.Scene {
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
-        this.questionText = this.add.text(screenCenterX, 200, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"})
-            .setStroke("#336699", 16)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        this.questionText = this.add.text(screenCenterX, 200, "", fonts.big(paletteString.lightCyan))
+            .setStroke(paletteString.blue, 16)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        this.response1 = this.add.text(screenCenterX - 500, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
-            .setStroke("#765387", 8)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        this.response1 = this.add.text(screenCenterX - 500, 420, "", fonts.big(paletteString.lightPink))
+            .setStroke(paletteString.purple, 8)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
         this.response1.on("pointerdown", () => { this.handleResponse("PLAYER", this.response1!.text); });
 
-        this.response2 = this.add.text(screenCenterX, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
-            .setStroke("#765387", 8)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        this.response2 = this.add.text(screenCenterX, 420, "", fonts.big(paletteString.lightPink))
+            .setStroke(paletteString.purple, 8)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
         this.response2.on("pointerdown", () => { this.handleResponse("PLAYER", this.response2!.text); });
 
-        this.response3 = this.add.text(screenCenterX + 500, 420, "", {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#f3dcff"})
-            .setStroke("#765387", 8)
-            .setShadow(2, 2, "#333333", 2, true, false)
+        this.response3 = this.add.text(screenCenterX + 500, 420, "", fonts.big(paletteString.lightPink))
+            .setStroke(paletteString.purple, 8)
+            .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
         this.response3.on("pointerdown", () => { this.handleResponse("PLAYER", this.response3!.text); });

@@ -22,6 +22,9 @@ export type SceneName = keyof typeof scenes;
 export const paletteHex = {
     green: 0x0EC756,
     gray: 0x777777,
+    black: 0x000000,
+    red: 0xFF0000,
+    yellow: 0xFFEE58,
 };
 
 export const paletteString = {
@@ -29,6 +32,14 @@ export const paletteString = {
     darkGray: "#333333",
     lightGray: "#aaaaaa",
     lightCyan: "#ccffff",
+    yellow: "#ffcc00",
+    lightPink: "#f3dcff",
+    green: "#289f00",
+    darkGreen: "#123e00",
+    darkRed: "#600000",
+    red: "#ff3a3a",
+    gold: "#665200",
+    purple: "#765387",
 };
 
 export const timing = {
@@ -37,6 +48,12 @@ export const timing = {
     textReadingPause: 3000,
 };
 
-export const fonts: Record<string, TextStyle> = {
-    "bigLight": {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: "#ccffff"},
+export type Fonts = "veryBig" | "big" | "normal" | "small" | "verySmall";
+
+export const fonts: Record<Fonts, (color: string) => TextStyle> = {
+    veryBig: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: color}),
+    big: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: color}),
+    normal: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color: color}),
+    small: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 48, color: color}),
+    verySmall: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 28, color: color}),
 };

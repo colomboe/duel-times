@@ -5,7 +5,7 @@ import {Player} from "../model/definitions.ts";
 import {gameStatus, players} from "../model/data.ts";
 import {dictionary} from "../model/i18n.ts";
 import {BaseScene} from "./BaseScene.ts";
-import {paletteString, timing} from "../Config.ts";
+import {fonts, paletteString, timing} from "../Config.ts";
 
 export class PlayerSelection extends BaseScene {
 
@@ -24,8 +24,7 @@ export class PlayerSelection extends BaseScene {
             avatar.once("pointerdown", () => this.avatarSelected(avatar, p));
         });
 
-        this.add.text(center.x, 150, dictionary.selectPlayer,
-            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: paletteString.lightCyan})
+        this.add.text(center.x, 150, dictionary.selectPlayer, fonts.big(paletteString.lightCyan))
             .setStroke(paletteString.blue, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
@@ -54,12 +53,8 @@ export class PlayerSelection extends BaseScene {
             .setScale(0.35)
             .setInteractive();
 
-        const text = this.add.text(
-            offsetX * (index + 1),
-            800,
-            player.label,
-            {fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color: paletteString.lightCyan}
-        ).setOrigin(0.5);
+        const text = this.add.text(offsetX * (index + 1), 800, player.label, fonts.normal(paletteString.lightCyan))
+            .setOrigin(0.5);
 
         this.avatars.push(avatar);
         this.names.push(text);

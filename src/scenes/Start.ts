@@ -65,14 +65,14 @@ export class Start extends BaseScene {
             centerX,
             this.cameras.main.height - 50,
             dictionary.moreInfoLink,
-            {fontFamily: "Arial", fontSize: 28, color: paletteString.lightGray, fontStyle: "italic"}
+            fonts.verySmall(paletteString.lightGray)
         )
             .setOrigin(0.5)
             .setInteractive();
     }
 
     private addPressToStartMessage(centerX: number) {
-        this.add.text(centerX, this.cameras.main.height - 180, dictionary.pressToStart, fonts.bigLight)
+        this.add.text(centerX, this.cameras.main.height - 180, dictionary.pressToStart, fonts.big(paletteString.lightCyan))
             .setStroke(paletteString.blue, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
