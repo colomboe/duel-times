@@ -1,26 +1,19 @@
 import {gameStatus} from "../model/data.ts";
 import {getDefeatedCount} from "../model/actions.ts";
 import {dictionary} from "../model/i18n.ts";
-import {fonts, paletteString} from "../Config.ts";
+import {fonts, paletteString, timing} from "../Config.ts";
+import {BaseScene} from "./BaseScene.ts";
 
-export class NextEnemy extends Phaser.Scene {
-
-    preload() {
-    }
+export class NextEnemy extends BaseScene {
 
     create() {
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const center = this.screenCenter();
         const offsetX = this.cameras.main.worldView.x + this.cameras.main.width / 4;
 
-        this.tweens.add({
-            targets:  this.sound.get("intro-music"),
-            volume: 0.5,
-            duration: 500,
-        });
+        this.tweens.add({ targets:  this.sound.get("intro-music"), volume: 0.5, duration: 500 });
 
-        this.add
-            .image(offsetX*2, 500, "rival-frame")
+        this.add.image(offsetX * 2, 500, "rival-frame")
             .setScale(0.55);
 
         const scrollOffsetX = -offsetX * getDefeatedCount();
@@ -45,29 +38,27 @@ export class NextEnemy extends Phaser.Scene {
 
         });
 
-        this.add.text(screenCenterX, 150, dictionary.nextRival, fonts.big(paletteString.yellow))
+        this.add.text(center.x, 150, dictionary.nextRival, fonts.big(paletteString.yellow))
             .setStroke(paletteString.gold, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        this.cameras.main.fadeIn(1000, 0, 0, 0);
-
-        this.input.once("pointerdown", () => {
-            this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
-            this.tweens.add({
-                targets:  this.sound.get("intro-music"),
-                volume: {
-                    getStart: () => 0.5,
-                    getEnd: () => 0,
-                },
-                duration: 2000
+        this.fadeInAndThen(() => {
+            this.input.once("pointerdown", () => {
+                this.sound.add("menu-sfx", { loop: false, volume: 1 }).play();
+                this.tweens.add({
+                    targets:  this.sound.get("intro-music"),
+                    volume: {
+                        getStart: () => 0.5,
+                        getEnd: () => 0,
+                    },
+                    duration: timing.fastTransition * 0.9
+                });
+                this.fadeOutAndNavigateTo("Battle");
             });
-            this.cameras.main.fadeOut(2000, 0, 0, 0);
         });
 
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-            this.scene.start("Battle");
-        });
+
     }
 
 }
