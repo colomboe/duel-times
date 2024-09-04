@@ -54,6 +54,6 @@ export const fonts: Record<Fonts, (color: string) => TextStyle> = {
     veryBig: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: color}),
     big: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: color}),
     normal: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color: color}),
-    small: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 48, color: color}),
+    small: color => ({fontFamily: "Arial", fontSize: 48, color: color}),
     verySmall: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 28, color: color}),
 };
