@@ -25,9 +25,6 @@ export class MatchOutcome extends BaseScene {
             .setOrigin(0.5);
 
         this.fadeInAndThen(() => this.afterFadeIn(), timing.veryFastTransition);
-        // this.cameras.main.fadeIn(400, 0, 0, 0);
-        // setTimeout(() => this.afterFadeIn(), 700);
-        // TODO: check timing difference
     }
 
     private afterFadeIn() {
