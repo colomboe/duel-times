@@ -43,6 +43,7 @@ export const paletteString = {
 };
 
 export const timing = {
+    veryFastTransition: 500,
     fastTransition: 1000,
     midTransition: 2000,
     textReadingPause: 3000,

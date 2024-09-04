@@ -2,36 +2,35 @@ import Image = Phaser.GameObjects.Image;
 import {gameStatus} from "../model/data.ts";
 import {getCurrentLevel, prepareForNextRival, resetGame} from "../model/actions.ts";
 import {dictionary} from "../model/i18n.ts";
-import {fonts, paletteString} from "../Config.ts";
+import {fonts, paletteString, timing} from "../Config.ts";
+import {BaseScene} from "./BaseScene.ts";
 
-export class MatchOutcome extends Phaser.Scene {
+export class MatchOutcome extends BaseScene {
 
     private bg?: Image;
     private playerAvatar?: Image;
     private rivalAvatar?: Image;
 
-    preload() {
-    }
-
     create() {
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        const center = this.screenCenter();
 
-        this.bg = this.add.image(screenCenterX, screenCenterY, "battle_background")
+        this.bg = this.add.image(center.x, center.y, "battle_background")
             .setAlpha(0.2)
             .setScale(0.9);
 
-        this.add.text(screenCenterX, 200, dictionary.winner, fonts.big(paletteString.lightCyan))
+        this.add.text(center.x, 200, dictionary.winner, fonts.big(paletteString.lightCyan))
             .setStroke(paletteString.blue, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        this.cameras.main.fadeIn(400, 0, 0, 0);
-        setTimeout(() => this.afterFadeIn(), 700);
+        this.fadeInAndThen(() => this.afterFadeIn(), timing.veryFastTransition);
+        // this.cameras.main.fadeIn(400, 0, 0, 0);
+        // setTimeout(() => this.afterFadeIn(), 700);
+        // TODO: check timing difference
     }
 
-    afterFadeIn() {
+    private afterFadeIn() {
 
         const currentLevel = getCurrentLevel();
 
@@ -48,69 +47,56 @@ export class MatchOutcome extends Phaser.Scene {
 
         const imageToScale = gameStatus.currentMatch.winner === "PLAYER" ? this.playerAvatar : this.rivalAvatar;
 
-        this.tweens.chain({
+        const tween = this.tweens.chain({
             tweens: [
                 {
                     targets: [this.playerAvatar, this.rivalAvatar],
-                    alpha: {
-                        getStart: () => 0,
-                        getEnd: () => 1,
-                    },
-                    y: {
-                        getStart: () => 700,
-                        getEnd: () => 600,
-                    },
+                    alpha: { getStart: () => 0, getEnd: () => 1 },
+                    y: { getStart: () => 700, getEnd: () => 600 },
                     ease: "Sine.out",
-                    duration: 1000,
+                    duration: timing.fastTransition,
                 },
                 {
                     targets: imageToScale,
-                    scale: {
-                        getStart: () => 0.3,
-                        getEnd: () => 0.6,
-                    },
+                    scale: { getStart: () => 0.3, getEnd: () => 0.6 },
                     ease: "Sine.out",
-                    duration: 1000,
+                    duration: timing.fastTransition,
                 },
             ]
         }).play();
 
-        setTimeout(() => {
+        tween.once("complete", () => {
             this.input.once("pointerdown", () => {
                 this.tweens.add({
                     targets:  this.sound.get("in-game-music"),
-                    volume: {
-                        getStart: () => 0.5,
-                        getEnd: () => 0,
-                    },
-                    duration: 800
+                    volume: { getStart: () => 0.5, getEnd: () => 0 },
+                    duration: timing.fastTransition * 0.9
                 });
-                this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+                this.fadeOutAndThen(() => this.proceedToNextStep());
             });
+        });
+    }
 
-            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+    private proceedToNextStep() {
+        this.bg?.destroy();
+        this.textures.remove("battle_background");
 
-                this.bg?.destroy();
-                this.textures.remove("battle_background");
+        this.sound.get("in-game-music").stop();
+        this.sound.get("in-game-music").destroy();
 
-                this.sound.get("in-game-music").stop();
-                this.sound.get("in-game-music").destroy();
-
-                if (gameStatus.currentMatch.winner === "RIVAL") {
-                    resetGame();
-                    this.scene.start("Start");
-                }
-                else if (gameStatus.currentMatch.currentLevel.rival.finalBoss) {
-                    resetGame();
-                    this.scene.start("Final");
-                }
-                else {
-                    prepareForNextRival();
-                    this.scene.start("NextEnemy");
-                }
-            });
-        }, 2000);
-
+        if (gameStatus.currentMatch.winner === "RIVAL") {
+            resetGame();
+            this.navigateTo("Start");
+        }
+        else if (gameStatus.currentMatch.currentLevel.rival.finalBoss) {
+            resetGame();
+            this.navigateTo("Final");
+        }
+        else {
+            prepareForNextRival();
+            this.navigateTo("NextEnemy");
+        }
     }
 
 }
