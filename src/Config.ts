@@ -40,21 +40,24 @@ export const paletteString = {
     red: "#ff3a3a",
     gold: "#665200",
     purple: "#765387",
+    white: "#ffffff",
 };
 
 export const timing = {
     veryFastTransition: 500,
     fastTransition: 1000,
     midTransition: 2000,
+    slowTransition: 3000,
     textReadingPause: 3000,
 };
 
-export type Fonts = "veryBig" | "big" | "normal" | "small" | "verySmall";
+export type Fonts = "veryBig" | "big" | "normal" | "small" | "verySmall" | "credits";
 
 export const fonts: Record<Fonts, (color: string) => TextStyle> = {
-    veryBig: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color: color}),
-    big: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color: color}),
-    normal: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color: color}),
-    small: color => ({fontFamily: "Arial", fontSize: 48, color: color}),
-    verySmall: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 28, color: color}),
+    veryBig: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 224, color}),
+    big: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 74, color}),
+    normal: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 56, color}),
+    small: color => ({fontFamily: "Arial", fontSize: 48, color}),
+    verySmall: color => ({fontFamily: "Arial Black, Arial-BoldMT", fontSize: 28, color}),
+    credits: color => ({ fontFamily: "Univers, sans-serif", fontSize: 48, align: "center", color}),
 };
