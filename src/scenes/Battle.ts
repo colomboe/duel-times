@@ -6,13 +6,11 @@ import Container = Phaser.GameObjects.Container;
 import Tween = Phaser.Tweens.Tween;
 import {gameStatus} from "../model/data.ts";
 import {evaluateRivalSelection, getCurrentLevel, nextQuestion, questionOutcome} from "../model/actions.ts";
-import {Actor, Question} from "../model/definitions.ts";
-import {fonts, paletteHex, paletteString} from "../Config.ts";
+import {Actor, Level, Question} from "../model/definitions.ts";
+import {fonts, paletteHex, paletteString, timing} from "../Config.ts";
+import {BaseScene} from "./BaseScene.ts";
 
-const FADE_IN_DURATION = 1000;
 const PAUSE_AFTER_FADE_IN_DURATION = 500;
-const SEND_BACK_BG_DURATION = 1000;
-const ENTER_AVATARS_DURATION = 500;
 const ENERGY_BAR_LOADING_DURATION = 1500;
 const COUNTER_INTERVAL = 1000;
 const SLIDE_QUESTION_DURATION = 500;
@@ -22,7 +20,7 @@ const avatarY = 780;
 const playerAvatarX = 307;
 const rivalAvatarX = 1673;
 
-export class Battle extends Phaser.Scene {
+export class Battle extends BaseScene {
 
     private bg?: Image;
     private rival?: Image;
@@ -39,7 +37,7 @@ export class Battle extends Phaser.Scene {
     private playerEmitter?: ParticleEmitter;
     private rivalEmitter?: ParticleEmitter;
     private currentQuestion?: Question;
-    private answerProvided: boolean = false;
+    private doubleTapLock: boolean = false;
 
     preload() {
         const currentLevel = getCurrentLevel();
@@ -48,15 +46,64 @@ export class Battle extends Phaser.Scene {
 
     create() {
 
-        this.answerProvided = false;
+        this.doubleTapLock = false;
         const currentLevel = getCurrentLevel();
-
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        const center = this.screenCenter();
 
         this.sound.add("in-game-music", { loop: true, volume: 0.5 }).play();
-        this.bg = this.add.image(screenCenterX, screenCenterY, "battle_background");
+        this.bg = this.add.image(center.x, center.y, "battle_background");
 
+        this.setupAvatars(currentLevel);
+        this.setupGreenEnergyBars();
+
+        this.fadeInAndThen(() => this.scaleBackgroundAndShowAvatars(), PAUSE_AFTER_FADE_IN_DURATION);
+    }
+
+    private scaleBackgroundAndShowAvatars() {
+        this.tweens.add({targets: this.bg, duration: timing.fastTransition, alpha: 0.2, scale: 0.9, ease: "Sin.out" })
+            .play()
+            .once("complete", () => {
+
+                this.rival?.setVisible(true);
+                this.tweens.add({
+                    targets: this.rival,
+                    alpha: { getStart: () => 0, getEnd: () => 1 },
+                    y: { getStart: () => avatarY + 300, getEnd: () => avatarY },
+                    ease: "Sine.out",
+                    duration: timing.veryFastTransition,
+                })
+                    .play();
+
+                this.player?.setVisible(true);
+                this.tweens.add({
+                    targets: this.player,
+                    alpha: { getStart: () => 0, getEnd: () => 1},
+                    y: { getStart: () => avatarY + 300, getEnd: () => avatarY },
+                    ease: "Sine.out",
+                    duration: timing.veryFastTransition,
+                })
+                    .play()
+                    .once("complete", () => this.showEnergyBars());
+            });
+    }
+
+    private setupGreenEnergyBars() {
+        this.playerEnergy = this.add.rectangle(
+            this.player!.displayWidth * 1.5,
+            avatarY - 100,
+            0, 60, paletteHex.green, 1)
+            .setOrigin(0, 0)
+            .setDepth(100);
+
+        this.rivalEnergy = this.add.rectangle(
+            this.cameras.main.worldView.x + this.cameras.main.width - this.rival!.displayWidth * 1.5,
+            avatarY + 40,
+            0, 60, paletteHex.green, 1)
+            .setOrigin(1, 0)
+            .setDepth(100);
+    }
+
+    private setupAvatars(currentLevel: Level) {
         this.rival = this.add.image(rivalAvatarX, avatarY, `rival-${currentLevel.index}`)
             .setScale(0.3)
             .setOrigin(0.5, 0.5)
@@ -69,25 +116,11 @@ export class Battle extends Phaser.Scene {
             .setVisible(false);
         this.player.setX(this.player.displayWidth);
 
-        this.playerEnergy = this.add.rectangle(
-            this.player!.displayWidth * 1.5,
-            avatarY - 100,
-            0, 60, paletteHex.green, 1)
-            .setOrigin(0, 0)
-            .setDepth(100);
-
-        this.rivalEnergy = this.add.rectangle(
-            this.cameras.main.worldView.x + this.cameras.main.width - this.rival.displayWidth * 1.5,
-            avatarY + 40,
-            0, 60, paletteHex.green, 1)
-            .setOrigin(1, 0)
-            .setDepth(100);
-
         this.rivalEmitter = this.add.particles(
             rivalAvatarX, avatarY, "sparkle", {
                 lifespan: 1000,
-                speed: { min: 250, max: 350 },
-                scale: { start: 0.5, end: 0 },
+                speed: {min: 250, max: 350},
+                scale: {start: 0.5, end: 0},
                 gravityY: 350,
                 blendMode: "ADD",
                 emitting: false
@@ -96,113 +129,46 @@ export class Battle extends Phaser.Scene {
         this.playerEmitter = this.add.particles(
             playerAvatarX, avatarY, "sparkle", {
                 lifespan: 1000,
-                speed: { min: 250, max: 350 },
-                scale: { start: 0.5, end: 0 },
+                speed: {min: 250, max: 350},
+                scale: {start: 0.5, end: 0},
                 gravityY: 350,
                 blendMode: "ADD",
                 emitting: false
             });
-
-        setTimeout(() => this.afterFadeIn(), FADE_IN_DURATION + PAUSE_AFTER_FADE_IN_DURATION);
-        this.cameras.main.fadeIn(FADE_IN_DURATION, 0, 0, 0);
     }
 
-    afterFadeIn() {
-        this.tweens.add({
-            targets: this.bg,
-            duration: SEND_BACK_BG_DURATION,
-            alpha: 0.2,
-            scale: 0.9,
-            ease: "Sin.out",
-        })
-            .play()
-            .once("complete", () => {
+    private async showEnergyBars() {
+        this.setupRivalResponseProgressBar();
+        this.updateEnergyBarsValue(true);
 
-                this.rival?.setVisible(true);
-                this.tweens.add({
-                    targets: this.rival,
-                    alpha: {
-                        getStart: () => 0,
-                        getEnd: () => 1,
-                    },
-                    y: {
-                        getStart: () => avatarY + 300,
-                        getEnd: () => avatarY,
-                    },
-                    ease: "Sine.out",
-                    duration: ENTER_AVATARS_DURATION,
-                }).play();
-
-                this.player?.setVisible(true);
-                this.tweens.add({
-                    targets: this.player,
-                    alpha: {
-                        getStart: () => 0,
-                        getEnd: () => 1,
-                    },
-                    y: {
-                        getStart: () => avatarY + 300,
-                        getEnd: () => avatarY,
-                    },
-                    ease: "Sine.out",
-                    duration: ENTER_AVATARS_DURATION,
-                }).play();
-            });
-
-        setTimeout(() => this.showEnergyBars(), ENTER_AVATARS_DURATION + SEND_BACK_BG_DURATION);
+        await delay(ENERGY_BAR_LOADING_DURATION);
+        this.setupRedBarsUnderEnergyBars();
+        await this.startCountDown();
     }
 
-    showEnergyBars() {
+    private setupRedBarsUnderEnergyBars() {
+        this.add.rectangle(
+            this.player!.displayWidth * 1.5,
+            avatarY - 100,
+            800, 60, paletteHex.red, 1)
+            .setOrigin(0, 0);
 
-        this.rivalProgress = this.add.rectangle(
-            this.rival!.x - this.rival!.displayWidth / 2,
-            this.rival!.y - this.rival!.displayHeight / 2,
-            0, 10, paletteHex.yellow, 1).setOrigin(0, 1);
-
-        this.rivalProgressTween = this.tweens.add({
-            targets: this.rivalProgress,
-            duration: gameStatus.currentMatch.currentLevel.rival.responseDelay * 1000 + SLIDE_QUESTION_DURATION,
-            paused: true,
-            persist: true,
-            width: {
-                getStart: () => 0,
-                getEnd: () => this.rival?.displayWidth
-            }
-        });
-
-        this.rivalProgressTween.on("complete", () => this.handleResponse("RIVAL", evaluateRivalSelection()));
-
-        this.refreshEnergy(true);
-
-        setTimeout(() => {
-
-            this.add.rectangle(
-                this.player!.displayWidth * 1.5,
-                avatarY - 100,
-                800, 60, paletteHex.red, 1)
-                .setOrigin(0, 0);
-
-            this.add.rectangle(
-                rivalAvatarX - this.rival!.displayWidth * 0.5 - 60,
-                avatarY + 40,
-                800, 60, paletteHex.red, 1)
-                .setOrigin(1, 0);
-
-            this.startCountDown();
-
-        }, ENERGY_BAR_LOADING_DURATION);
-
+        this.add.rectangle(
+            rivalAvatarX - this.rival!.displayWidth * 0.5 - 60,
+            avatarY + 40,
+            800, 60, paletteHex.red, 1)
+            .setOrigin(1, 0);
     }
 
-    startCountDown() {
+    private async startCountDown() {
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const countDownText = this.add.text(screenCenterX, 400, "", fonts.veryBig(paletteString.red))
+        const center = this.screenCenter();
+        const countDownText = this.add.text(center.x, 400, "", fonts.veryBig(paletteString.red))
             .setStroke(paletteString.darkRed, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        const goText = this.add.text(screenCenterX, 400, "GO!", fonts.veryBig(paletteString.green))
+        const goText = this.add.text(center.x, 400, "GO!", fonts.veryBig(paletteString.green))
             .setStroke(paletteString.darkGreen, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
@@ -213,107 +179,108 @@ export class Battle extends Phaser.Scene {
             countDownText.setText(`${n}`);
             this.add.tween({
                 targets: countDownText,
-                y: {
-                    getStart: () => 450,
-                    getEnd: () => 400,
-                },
-                alpha: {
-                    getStart: () => 1,
-                    getEnd: () => 0,
-                },
+                y: { getStart: () => 450, getEnd: () => 400},
+                alpha: {getStart: () => 1, getEnd: () => 0},
                 ease: "Sine.in",
                 duration: COUNTER_INTERVAL - 300,
             });
         };
 
-        setTimeout(() => {
-            showCounter(3);
+        for (const i of [3, 2, 1]) {
+            showCounter(i);
             sfx.play();
-            setTimeout(() => {
-                showCounter(2);
-                sfx.play();
-                setTimeout(() => {
-                    showCounter(1);
-                    sfx.play();
-                    setTimeout(() => {
-                        countDownText.setVisible(false);
-                        this.add.tween({
-                            targets: goText,
-                            y: {
-                                getStart: () => 450,
-                                getEnd: () => 400,
-                            },
-                            alpha: {
-                                getStart: () => 1,
-                                getEnd: () => 0,
-                            },
-                            ease: "Sine.in",
-                            duration: COUNTER_INTERVAL + 200,
-                        });
-                        this.startGame();
-                    }, COUNTER_INTERVAL);
-                }, COUNTER_INTERVAL);
-            }, COUNTER_INTERVAL);
-        }, COUNTER_INTERVAL);
+            await delay(COUNTER_INTERVAL);
+        }
 
+        countDownText.setVisible(false);
+        this.add.tween({
+            targets: goText,
+            y: { getStart: () => 450, getEnd: () => 400 },
+            alpha: {getStart: () => 1, getEnd: () => 0 },
+            ease: "Sine.in",
+            duration: COUNTER_INTERVAL + 200,
+        });
+
+        this.createQuestionAndAnswersLabels();
+        await this.nextQuestion();
     }
 
-    startGame() {
+    private setupRivalResponseProgressBar() {
+        this.rivalProgress = this.add.rectangle(
+            this.rival!.x - this.rival!.displayWidth / 2,
+            this.rival!.y - this.rival!.displayHeight / 2,
+            0, 10, paletteHex.yellow, 1).setOrigin(0, 1);
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        this.rivalProgressTween = this.tweens.add({
+            targets: this.rivalProgress,
+            duration: gameStatus.currentMatch.currentLevel.rival.responseDelay * 1000 + SLIDE_QUESTION_DURATION,
+            paused: true,
+            persist: true,
+            width: {getStart: () => 0, getEnd: () => this.rival?.displayWidth},
+        });
 
-        this.questionText = this.add.text(screenCenterX, 200, "", fonts.big(paletteString.lightCyan))
+        this.rivalProgressTween.on("complete", () => this.handleResponse("RIVAL", evaluateRivalSelection()));
+    }
+
+    private createQuestionAndAnswersLabels() {
+
+        const center = this.screenCenter();
+
+        this.questionText = this.add.text(center.x, 200, "", fonts.big(paletteString.lightCyan))
             .setStroke(paletteString.blue, 16)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5);
 
-        this.response1 = this.add.text(screenCenterX - 500, 420, "", fonts.big(paletteString.lightPink))
+        this.response1 = this.add.text(center.x - 500, 420, "", fonts.big(paletteString.lightPink))
             .setStroke(paletteString.purple, 8)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response1.on("pointerdown", () => { this.handleResponse("PLAYER", this.response1!.text); });
+        this.response1.on("pointerdown", () => this.handleResponse("PLAYER", this.response1!.text));
 
-        this.response2 = this.add.text(screenCenterX, 420, "", fonts.big(paletteString.lightPink))
+        this.response2 = this.add.text(center.x, 420, "", fonts.big(paletteString.lightPink))
             .setStroke(paletteString.purple, 8)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response2.on("pointerdown", () => { this.handleResponse("PLAYER", this.response2!.text); });
+        this.response2.on("pointerdown", () => this.handleResponse("PLAYER", this.response2!.text));
 
-        this.response3 = this.add.text(screenCenterX + 500, 420, "", fonts.big(paletteString.lightPink))
+        this.response3 = this.add.text(center.x + 500, 420, "", fonts.big(paletteString.lightPink))
             .setStroke(paletteString.purple, 8)
             .setShadow(2, 2, paletteString.darkGray, 2, true, false)
             .setOrigin(0.5)
             .setInteractive();
-        this.response3.on("pointerdown", () => { this.handleResponse("PLAYER", this.response3!.text); });
+        this.response3.on("pointerdown", () => this.handleResponse("PLAYER", this.response3!.text));
 
         this.questionContainer = this.add.container(0, 0, [ this.questionText, this.response1, this.response2, this.response3 ]);
-
-        this.nextQuestion();
     }
 
-    nextQuestion() {
+    private async nextQuestion() {
         this.moveQuestionOut();
-        setTimeout(() => {
-            this.currentQuestion = nextQuestion();
-            this.questionText!.setText(this.currentQuestion.question);
-            this.response1!.setText(this.currentQuestion.response1);
-            this.response2!.setText(this.currentQuestion.response2);
-            this.response3!.setText(this.currentQuestion.response3);
-            this.add.tween({
-                targets: this.questionContainer,
-                x: { getStart: () => 2000, getEnd: () => 0 },
-                alpha: { getStart: () => 0, getEnd: () => 1 },
-                ease: "Sine.out",
-                duration: SLIDE_QUESTION_DURATION,
-            });
-            this.rivalProgressTween?.seek(0).play();
-            this.answerProvided = false;
-        }, SLIDE_QUESTION_DURATION);
+
+        await delay(SLIDE_QUESTION_DURATION);
+
+        this.currentQuestion = nextQuestion();
+        this.questionText!.setText(this.currentQuestion.question);
+        this.response1!.setText(this.currentQuestion.response1);
+        this.response2!.setText(this.currentQuestion.response2);
+        this.response3!.setText(this.currentQuestion.response3);
+        this.moveQuestionIn();
+        this.rivalProgressTween?.seek(0).play();
+        this.doubleTapLock = false;
     }
 
-    moveQuestionOut() {
+    private moveQuestionIn() {
+        this.add.tween({
+            targets: this.questionContainer,
+            x: {getStart: () => 2000, getEnd: () => 0},
+            alpha: {getStart: () => 0, getEnd: () => 1},
+            ease: "Sine.out",
+            duration: SLIDE_QUESTION_DURATION,
+        });
+    }
+
+    private moveQuestionOut() {
         this.add.tween({
             targets: this.questionContainer,
             x: { getStart: () => 0, getEnd: () => -2000 },
@@ -323,10 +290,10 @@ export class Battle extends Phaser.Scene {
         });
     }
 
-    handleResponse(actor: Actor, selection: string) {
+    private async handleResponse(actor: Actor, selection: string) {
 
-        if (this.answerProvided) return;
-        this.answerProvided = true;
+        if (this.doubleTapLock) return;
+        this.doubleTapLock = true;
 
         this.rivalProgressTween?.pause();
         this.tweens.add({ targets: this.rivalProgress, duration: 100, width: 0 });
@@ -338,25 +305,23 @@ export class Battle extends Phaser.Scene {
         else
             this.rivalEmitter!.explode(30);
 
-        this.refreshEnergy(false);
+        this.updateEnergyBarsValue(false);
 
         if (outcome.winner === undefined)
-            this.nextQuestion();
+            await this.nextQuestion();
         else {
             this.moveQuestionOut();
-            setTimeout(() => {
-                this.cameras.main.fadeOut(300, 0, 0, 0);
-                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    this.bg?.destroy();
-                    this.scene.start("MatchOutcome");
-                });
-            }, PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
+            await delay(PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
+            this.fadeOutAndThen(() => {
+                this.bg?.destroy();
+                this.navigateTo("MatchOutcome");
+            }, timing.veryFastTransition);
         }
     };
 
-    refreshEnergy(withAlpha: boolean) {
+    private updateEnergyBarsValue(firstTime: boolean) {
 
-        const alpha = withAlpha ? {
+        const alpha = firstTime ? {
             alpha: { getStart: () => 0, getEnd: () => 1 }
         } : {};
 
@@ -384,4 +349,8 @@ export class Battle extends Phaser.Scene {
 
     }
 
+}
+
+function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

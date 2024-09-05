@@ -28,8 +28,11 @@ export abstract class BaseScene extends Phaser.Scene {
         this.cameras.main.fadeOut(d, 0, 0, 0);
     }
 
-    protected fadeInAndThen(next: () => void, duration?: number) {
-        this.cameras.main.once(FADE_IN_COMPLETE, () => next());
+    protected fadeInAndThen(next: () => void, duration?: number, pause?: number) {
+        if (pause)
+            this.cameras.main.once(FADE_IN_COMPLETE, () => setTimeout(() => next(), pause));
+        else
+            this.cameras.main.once(FADE_IN_COMPLETE, () => next());
         const d = duration ? duration : timing.fastTransition;
         this.cameras.main.fadeIn(d, 0, 0, 0);
     }
