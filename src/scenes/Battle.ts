@@ -141,7 +141,7 @@ export class Battle extends BaseScene {
         this.setupRivalResponseProgressBar();
         this.updateEnergyBarsValue(true);
 
-        await delay(ENERGY_BAR_LOADING_DURATION);
+        await this.delay(ENERGY_BAR_LOADING_DURATION);
         this.setupRedBarsUnderEnergyBars();
         await this.startCountDown();
     }
@@ -189,7 +189,7 @@ export class Battle extends BaseScene {
         for (const i of [3, 2, 1]) {
             showCounter(i);
             sfx.play();
-            await delay(COUNTER_INTERVAL);
+            await this.delay(COUNTER_INTERVAL);
         }
 
         countDownText.setVisible(false);
@@ -258,7 +258,7 @@ export class Battle extends BaseScene {
     private async nextQuestion() {
         this.moveQuestionOut();
 
-        await delay(SLIDE_QUESTION_DURATION);
+        await this.delay(SLIDE_QUESTION_DURATION);
 
         this.currentQuestion = nextQuestion();
         this.questionText!.setText(this.currentQuestion.question);
@@ -311,7 +311,7 @@ export class Battle extends BaseScene {
             await this.nextQuestion();
         else {
             this.moveQuestionOut();
-            await delay(PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
+            await this.delay(PAUSE_BEFORE_OUTCOME_SCENE_DURATION);
             this.fadeOutAndThen(() => {
                 this.bg?.destroy();
                 this.navigateTo("MatchOutcome");
@@ -349,8 +349,4 @@ export class Battle extends BaseScene {
 
     }
 
-}
-
-function delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }

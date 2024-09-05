@@ -41,4 +41,26 @@ export abstract class BaseScene extends Phaser.Scene {
         this.scene.start(nextSceneName);
     }
 
+    // protected delay(ms: number): Promise<void> {
+    //     return new Promise(resolve => setTimeout(resolve, ms));
+    // }
+
+    protected delay(ms: number): SkippableDelayPromise<void>  {
+
+        let skip: () => void;
+        const promise = new Promise<void>(resolve => {
+            const timeoutId = setTimeout(resolve, ms);
+            skip = () => {
+                clearTimeout(timeoutId);
+                resolve();
+            };
+        }) as SkippableDelayPromise<void>;
+
+        promise.skip = () => skip();
+
+        return promise;
+    }
+
 }
+
+export type SkippableDelayPromise<T> = Promise<T> & { skip: () => void };

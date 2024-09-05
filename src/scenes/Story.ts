@@ -1,23 +1,24 @@
 import Image = Phaser.GameObjects.Image;
 import Text = Phaser.GameObjects.Text;
 import Rectangle = Phaser.GameObjects.Rectangle;
-import TimerEvent = Phaser.Time.TimerEvent;
 import {gameStatus} from "../model/data.ts";
 import {dictionary} from "../model/i18n.ts";
-import {BaseScene, XYPoint} from "./BaseScene.ts";
+import {BaseScene, SkippableDelayPromise} from "./BaseScene.ts";
 import {Player} from "../model/definitions.ts";
 import {fonts, paletteHex, paletteString, timing} from "../Config.ts";
+import {TypeWriter} from "./TypeWriter.ts";
 
 export class Story extends BaseScene {
 
     private player?: Player;
+    private story1?: Image;
     private story2?: Image;
     private avatar1?: Image;
     private avatar2?: Image;
     private textArea?: Rectangle;
     private textParagraph?: Text;
-    private typeWriterEvent?: TimerEvent;
-
+    private typeWriter?: TypeWriter;
+    private delayPromise?: SkippableDelayPromise<void>;
 
     preload() {
         this.player = gameStatus.selectedPlayer;
@@ -27,19 +28,23 @@ export class Story extends BaseScene {
     create() {
         const center = this.screenCenter();
 
-        const firstBackground = this.addFirstBackgroundPicture(center);
-        const secondBackgroundPicture = this.addSecondBackgroundPicture(center);
+        this.story1 = this.add.image(center.x, center.y, "story1").setInteractive();
+        this.story2 = this.add.image(center.x, center.y, "story2").setInteractive().setAlpha(0);
+        this.textArea = this.add.rectangle(0, 800, 0, 400, paletteHex.black, 0.6).setOrigin(0, 0);
+        this.avatar1 = this.add.image(1700, 600, `player-${this.player!.id}`).setScale(0.35).setAlpha(0);
+        this.avatar2 = this.add.image(1700, 900, `player-${this.player!.id}-sad`).setScale(0.35).setAlpha(0);
+        this.textParagraph = this.add
+            .text(100, 830, "", fonts.small(paletteString.lightCyan))
+            .setStroke(paletteString.blue, 8);
+        this.typeWriter = new TypeWriter(this, this.textParagraph);
 
-        firstBackground.once("pointerdown", () => this.navigateToNextScene());
-        secondBackgroundPicture.once("pointerdown", () => this.navigateToNextScene());
+        this.story1.on("pointerdown", () => this.skipTypewriter());
+        this.story2.on("pointerdown", () => this.skipTypewriter());
 
-        this.fadeInAndThen(() => this.showFirstParagraph());
+        this.fadeInAndThen(() => this.stepBackground1());
     }
 
-    private showFirstParagraph() {
-
-        this.textArea = this.add.rectangle(0, 800, 0, 400, paletteHex.black, 0.6).setOrigin(0, 0);
-        this.avatar1 = this.add.image(1700, 600, `player-${this.player!.id}`).setScale(0.35);
+    private stepBackground1() {
 
         this.tweens.add({
             targets: this.avatar1,
@@ -56,19 +61,19 @@ export class Story extends BaseScene {
             duration: timing.fastTransition,
         });
 
-        textAreaTween.on("complete", () => {
-            this.textParagraph = this.add
-                .text(100, 830, "", fonts.small(paletteString.lightCyan))
-                .setStroke(paletteString.blue, 8);
-
-            this.typewriteText(dictionary.story1, timing.textReadingPause, () => this.showSecondBackgroundAndParagraph());
-        });
+        textAreaTween.on("complete", () => this.stepText1());
     }
 
-    private showSecondBackgroundAndParagraph() {
-        this.resetTypeWriter();
+    private async stepText1() {
+        await this.typeWriter?.start(dictionary.story1);
+        this.delayPromise = this.delay(timing.textReadingPause);
+        await this.delayPromise;
+        this.delayPromise = undefined;
+        this.stepBackground2();
+    }
 
-        this.avatar2 = this.add.image(1700, 900, `player-${this.player!.id}-sad`).setScale(0.35);
+    private stepBackground2() {
+        this.typeWriter?.reset();
 
         const sceneSwitchTween = this.tweens.add({
             targets: [ this.avatar2, this.story2 ],
@@ -77,44 +82,27 @@ export class Story extends BaseScene {
             duration: timing.midTransition,
         }).play();
 
-        sceneSwitchTween.on("complete", () => {
-            this.typewriteText(dictionary.story2, timing.textReadingPause, () => this.navigateToNextScene());
-        });
+        sceneSwitchTween.on("complete", () => this.setText2());
     }
 
-    private navigateToNextScene() {
-        this.resetTypeWriter();
+    private async setText2() {
+        await this.typeWriter?.start(dictionary.story2);
+        this.delayPromise = this.delay(timing.textReadingPause);
+        await this.delayPromise;
+        this.delayPromise = undefined;
+        this.goToNextScene();
+    }
+
+    private goToNextScene() {
+        this.typeWriter?.destroy();
         this.fadeOutAndNavigateTo("NextEnemy");
     }
 
-    private addSecondBackgroundPicture(center: XYPoint) {
-        return this.story2 = this.add.image(center.x, center.y, "story2").setAlpha(0)
-            .setInteractive();
-    }
-
-    private addFirstBackgroundPicture(center: XYPoint) {
-        return this.add.image(center.x, center.y, "story1")
-            .setInteractive();
-    }
-
-    private resetTypeWriter() {
-        this.typeWriterEvent?.remove();
-        this.typeWriterEvent?.destroy();
-        if (this.textParagraph) this.textParagraph.text = "";
-    }
-
-    private typewriteText(text: string, completedDelay: number, onComplete?: () => void) {
-        let i = 0;
-        this.typeWriterEvent = this.time.addEvent({
-            callback: () => {
-                if (this.textParagraph == null) return;
-                this.textParagraph.text += text[i++];
-                if (i >= text.length && onComplete)
-                    setTimeout(() => onComplete(), completedDelay);
-            },
-            repeat: text.length - 1,
-            delay: 40,
-        });
+    private skipTypewriter() {
+        if (this.typeWriter?.isStarted())
+            this.typeWriter?.skip();
+        else if (this.delayPromise)
+            this.delayPromise.skip();
     }
 
 }
