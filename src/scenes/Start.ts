@@ -43,7 +43,7 @@ export class Start extends BaseScene {
         const aboutLinkText = this.addAboutLinkText(center.x);
                               this.startIntroMusic();
 
-        aboutLinkText.on("pointerdown", () => window.open("https://github.com/colomboe/duel-times/blob/main/README.md", "_blank"));
+        aboutLinkText.on("pointerdown", () => window.open("https://www.msec.it/blog/duel-times/", "_blank"));
 
         background.once("pointerdown", () => {
             this.playClickSoundFx();
