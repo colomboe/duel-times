@@ -19,9 +19,9 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint": "^10.0.3",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1",
-    "vite": "^8.0.0"
+    "eslint": "^10.2.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1",
+    "vite": "^8.0.8"
   }
 }
